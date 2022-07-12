@@ -1,0 +1,16 @@
+SELECT DISTINCT 
+?subject ?wdt_property ?object
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_property.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21510852. ## Commons link constraint
+  #?statement pq:P2307 ?namespace.
+  
+  ?subject ?wdt_property ?object.
+  FILTER(!STRSTARTS(STR(?object), 'http://commons.wikimedia.org/'))
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P14)
+}

@@ -1,0 +1,21 @@
+# type of constraint for Wikidata properties: specifies that a property must have at least one reference
+SELECT
+?subject
+?wdt_prop
+?constraint_status
+?deprecated_reason
+WHERE
+{
+  ?subject ?p_property ?stmt.
+  FILTER NOT EXISTS {?stmt prov:wasDerivedFrom ?wdref.}
+  ?wd_property wikibase:claim ?p_property.
+  ?wd_property wikibase:directClaim ?wdt_prop.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q54554025. ## citation needed constraint 
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line clause to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_prop = wdt:P512)
+} 

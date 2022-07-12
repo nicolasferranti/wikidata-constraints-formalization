@@ -1,0 +1,26 @@
+SELECT DISTINCT
+  ?o
+  ?wdt_property 
+  ?wdt_required_property
+  ?required_value
+{
+    {
+      ?property p:P2302 ?statement.
+      ?property wikibase:directClaim ?wdt_property.
+      ?statement ps:P2302 wd:Q21510864. ## value-requires-statement constraint
+      ?statement pq:P2305 ?has_required_value.
+      ?statement pq:P2306 ?required_property.
+      ?required_property wikibase:directClaim ?wdt_required_property.
+        
+      ?s ?wdt_property ?o.
+    }
+      
+    FILTER NOT EXISTS { 
+      ?o ?wdt_required_property ?any_required_value. 
+      ?statement pq:P2305 ?any_required_value.
+    }
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P3275)
+}

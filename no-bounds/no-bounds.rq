@@ -1,0 +1,37 @@
+SELECT DISTINCT
+?subject ?wd_property ?wdv
+{
+  {
+    ?wd_property p:P2302 ?statement.
+    ?wd_property wikibase:directClaim ?wdt_property.
+    ?statement ps:P2302 wd:Q51723761. # no-bounds contraint
+    ?wd_property wikibase:statementValue ?psv_property.
+  
+    ?wd_property wikibase:claim ?p_property. 
+  
+    ?subject ?p_property ?obj_stmt.
+    ?obj_stmt ?psv_property ?wdv.
+  
+    ?wdv wikibase:quantityLowerBound [].
+    FILTER NOT EXISTS { ?statement pq:P2303 ?subject. }
+  }
+  UNION 
+  {
+    ?wd_property p:P2302 ?statement.
+    ?wd_property wikibase:directClaim ?wdt_property.
+    ?statement ps:P2302 wd:Q51723761. # no-bounds contraint
+    ?wd_property wikibase:statementValue ?psv_property.
+  
+    ?wd_property wikibase:claim ?p_property. 
+    ?wd_property wikibase:directClaim ?wdt_property.
+    
+    ?subject ?p_property ?obj_stmt.
+    ?obj_stmt ?psv_property ?wdv.
+  
+    ?wdv wikibase:quantityUpperBound [].
+    FILTER NOT EXISTS { ?statement pq:P2303 ?subject. }
+  }
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P1083)
+}

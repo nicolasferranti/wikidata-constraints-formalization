@@ -1,0 +1,13 @@
+SELECT DISTINCT 
+?subject ?wdt_property ?object
+WHERE
+{
+  ?subject ?wdt_property ?object.
+  
+  ?wd_property wikibase:directClaim ?wdt_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
+  FILTER NOT EXISTS {?statement pq:P2305 wd:Q54285143.} # wikibase form
+ 
+  ?subject wikibase:propertyType wikibase:WikibaseForm .
+}

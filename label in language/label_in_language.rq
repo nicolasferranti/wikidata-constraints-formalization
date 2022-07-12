@@ -1,0 +1,23 @@
+SELECT
+?subject ?property ?language_code
+?constraint_status ?deprecated_reason
+{
+  ?property p:P2302 ?statement.
+  ?property wikibase:directClaim ?wdt_property.
+  ?statement ps:P2302 wd:Q108139345. # label in language constraint 
+  ?statement pq:P424 ?language_code.
+  
+  ?subject ?wdt_property [].
+  
+  FILTER NOT EXISTS {
+    ?subject rdfs:label ?label.
+    FILTER (langMatches( lang(?label), str(?language_code) ) )  
+  }
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P1428)
+}

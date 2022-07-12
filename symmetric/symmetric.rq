@@ -1,0 +1,22 @@
+SELECT DISTINCT
+?subject
+?wdt_property
+?object
+?constraint_status
+?deprecated_reason
+WHERE
+{
+  ?subject ?wdt_property ?object.
+  FILTER NOT EXISTS {?object ?wdt_property ?subject.}
+  ?wd_property wikibase:directClaim ?wdt_property .
+  ?wd_property p:P2302 ?statement .
+  ?statement ps:P2302 wd:Q21510862 . ## symmetric constraint
+  # including exceptions
+  OPTIONAL {?statement pq:P2303 ?exception}.
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  # collecting deprecated ones
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P530)
+}

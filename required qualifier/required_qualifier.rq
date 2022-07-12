@@ -1,0 +1,20 @@
+SELECT DISTINCT
+?subject
+?wdt_property
+?obj_statement
+?pq_qualifier_must_be_used
+WHERE
+{
+  ?subject ?p_property ?obj_statement.
+  FILTER NOT EXISTS {?obj_statement ?pq_qualifier_must_be_used ?something}
+  
+  ?property wikibase:directClaim ?wdt_property .
+  ?property wikibase:claim ?p_property.
+  ?property p:P2302 ?statement .
+  ?statement ps:P2302 wd:Q21510856 . ## required qualifier constraint
+  ?statement pq:P2306/wikibase:qualifier ?pq_qualifier_must_be_used.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P1128)
+}

@@ -1,0 +1,38 @@
+## QUERY SUBJECTS THAT HAVE MORE THAN 1 VALUE VIOLATING THE SINGLE-VALUE CONSTRAINT
+select DISTINCT 
+  ?subject ?property
+  ?wds1 ?wds2
+  ?o1_entity ?o2_entity
+  ?constraint_status ?deprecated_reason
+{
+  
+  ?property wikibase:statementProperty ?ps_property.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q19474404. # single-value constraint
+  
+  ?property wikibase:claim ?p_property.
+  
+  ?subject ?p_property ?wds1,?wds2.
+  
+  ?wds1 ?ps_property ?o1_entity. 
+  ?wds2 ?ps_property ?o2_entity.
+  
+  FILTER (?o1_entity < ?o2_entity)
+  FILTER NOT EXISTS {
+    # example P36 (capital)
+    # if it has a separator
+    ?statement pq:P4155 ?separator.
+    # get the properties used as separator (as qualifiers)
+    ?separator wikibase:qualifier ?separator_property_qualifier.
+    ?wds1 ?separator_property_qualifier ?o1_qualifier.
+    ?wds2 ?separator_property_qualifier ?o2_qualifier.
+    FILTER (?o1_qualifier != ?o2_qualifier)
+  }
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.  
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?p_property = p:P5062)
+}

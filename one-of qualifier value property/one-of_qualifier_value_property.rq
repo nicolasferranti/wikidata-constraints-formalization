@@ -1,0 +1,22 @@
+SELECT DISTINCT 
+?subject ?wd_property ?pq_qualifier_property ?item_qualifier
+?constraint_status ?deprecated_reason
+WHERE
+{
+  ?wd_property wikibase:claim ?p_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q52712340. ## one-of qualifier VALUE constraint
+  ?statement pq:P2306/wikibase:qualifier ?pq_qualifier_property. 
+   
+  
+  ?subject ?p_property ?stmt_object. 
+  ?stmt_object ?pq_qualifier_property ?item_qualifier.
+  FILTER NOT EXISTS {?statement pq:P2305 ?item_qualifier.}
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?p_property = p:P2002)
+}

@@ -1,0 +1,22 @@
+SELECT DISTINCT 
+?subject ?subject_stmt ?pq_property ?object
+?constraint_status ?deprecated_reason
+WHERE
+{
+  ?wd_property wikibase:qualifier ?pq_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q53869507. # property scope constraint
+  ?statement pq:P5314 [].
+  
+  ?subject_stmt ?pq_property ?object.
+  ?subject ?p ?subject_stmt.
+  FILTER NOT EXISTS {?statement pq:P5314 wd:Q54828449} # as qualifier
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject}
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?pq_property = pq:P854)
+}

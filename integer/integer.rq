@@ -1,0 +1,19 @@
+SELECT
+  ?subject ?wdt_property ?object
+  ?deprecated_reason
+  ?constraint_status
+{
+  ?wd_property p:P2302 ?statement.
+  ?wd_property wikibase:directClaim ?wdt_property.
+  ?statement ps:P2302 wd:Q52848401. # integer constraint
+  
+  ?subject ?wdt_property ?object.
+  
+  FILTER (regex(str(?object), "[+|-]{0,1}[0-9]*[.][0-9]*[1-9][0-9]*"))
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P1082)
+}

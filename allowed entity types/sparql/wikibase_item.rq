@@ -1,0 +1,18 @@
+SELECT DISTINCT 
+?subject ?wdt_property
+WHERE
+{
+  
+  ?subject ?wdt_property [].
+  
+  ?wd_property wikibase:directClaim ?wdt_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
+  FILTER NOT EXISTS {?statement pq:P2305 wd:Q29934200.} # wikibase item
+ 
+  ?subject wikibase:propertyType wikibase:WikibaseItem.
+
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type 
+  FILTER ( ?wdt_property  = wdt:P1629)
+}

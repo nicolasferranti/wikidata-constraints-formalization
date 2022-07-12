@@ -1,0 +1,20 @@
+SELECT DISTINCT
+  ?subject
+  ?wd_property
+  ?pq_qualifier
+  ?value
+WHERE
+{
+  ?subject ?p_property ?object_statement.
+  ?object_statement ?pq_qualifier ?value.
+  ?wd_qualifier wikibase:qualifier ?pq_qualifier.
+  FILTER NOT EXISTS {?statement pq:P2306 ?wd_qualifier}
+   
+  ?wd_property wikibase:claim ?p_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21510851. ## allowed qualifiers constraint
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?p_property = p:P210)
+}

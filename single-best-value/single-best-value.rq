@@ -1,0 +1,23 @@
+SELECT DISTINCT
+  ?subject ?wd_property
+{
+  FILTER NOT EXISTS {?stmt_obj wikibase:rank wikibase:PreferredRank}  
+  {
+    SELECT DISTINCT
+      ?subject ?wd_property ?stmt_obj
+    WHERE
+    {
+      ?wd_property wikibase:claim ?p_property.
+      ?wd_property p:P2302 ?statement.
+      ?statement ps:P2302 wd:Q52060874. ## single-best-value constraint
+ 
+      ?subject ?p_property ?stmt_obj.
+      ?subject ?p_property ?stmt_obj2.
+      FILTER (?stmt_obj != ?stmt_obj2)  
+     
+      # EXAMPLE (comment next line to query all violations for all properties of this type...)
+      # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+      FILTER (?p_property = p:P570)
+    }
+  }
+}

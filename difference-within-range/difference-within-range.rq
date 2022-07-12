@@ -1,0 +1,62 @@
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bd: <http://www.bigdata.com/rdf#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT DISTINCT
+?subject
+?wdt_property
+?wdt_property_to_check_differ
+?min_val ?max_val
+?final_date_1 ?final_date_2
+(COALESCE(   (ABS(xsd:date(?final_date_1) - xsd:date(?final_date_2)))/365  , "null" ) as ?diff)
+{
+  FILTER (
+    COALESCE(   (ABS(xsd:date(?final_date_1) - xsd:date(?final_date_2)))/365  , "null" ) < ?min_val ||
+    COALESCE(   (ABS(xsd:date(?final_date_1) - xsd:date(?final_date_2)))/365  , "null" ) > ?max_val
+  )
+  {
+    SELECT DISTINCT
+    ?subject
+    ?wdt_property
+    ?wdt_property_to_check_differ
+    ?min_val ?max_val
+    (IF(REGEX(STR(?date_1),"http://www.wikidata.org/"), ?earliest_date_1, ?date_1) as ?final_date_1)
+    (IF(REGEX(STR(?date_2),"http://www.wikidata.org/"), ?earliest_date_2, ?date_2) as ?final_date_2)
+   WHERE
+    {
+      ?wd_property p:P2302 ?statement .
+      ?statement ps:P2302 wd:Q21510854 . ## difference-within-range constraint
+      ?statement pq:P2306 ?property_to_check_differ . 
+  
+      ?wd_property wikibase:directClaim ?wdt_property .  
+      ?wd_property wikibase:claim ?p_property. 
+  
+      ?property_to_check_differ wikibase:directClaim ?wdt_property_to_check_differ.
+      ?property_to_check_differ wikibase:claim ?p_property_to_check_differ. 
+  
+      ?subject ?wdt_property ?date_1;
+               ?wdt_property_to_check_differ ?date_2.
+  
+      OPTIONAL {
+        ?subject ?p_property ?stmt1. 
+        ?stmt1 pq:P1319 ?earliest_date_1.
+      }
+      OPTIONAL {
+        ?subject ?p_property_to_check_differ ?stmt2. 
+        ?stmt2 pq:P1319 ?earliest_date_2.
+      }
+  
+      ?statement pq:P2313 ?min_val .
+      ?statement pq:P2312 ?max_val .
+      
+      # EXAMPLE (comment next line to query all violations for all properties of this type...)
+      # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+      FILTER (?wdt_property = wdt:P4602)
+    } 
+  }
+}

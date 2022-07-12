@@ -1,0 +1,23 @@
+SELECT DISTINCT 
+?subject (?wd as ?prop) ?object ?stmt (?wd_property as ?incorrect_reference)
+WHERE
+{
+  ?wd_property wikibase:reference ?pr_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q53869507. # property scope constraint
+  ?statement pq:P5314 [].
+  
+  ?wd wikibase:claim ?p.
+  ?wd wikibase:statementProperty ?ps.
+  ?subject ?p ?stmt.
+  ?stmt ?ps ?object.
+  ?stmt prov:wasDerivedFrom ?wdref.
+  ?wdref ?pr_property [].
+  
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject. }
+  FILTER NOT EXISTS {?statement pq:P5314 wd:Q54828450} # as reference
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?pr_property = pr:P569)
+}

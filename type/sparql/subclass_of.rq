@@ -1,0 +1,23 @@
+## type of constraint for Wikidata properties: used to specify that the item described by such properties should be a subclass or instance of a given type
+SELECT DISTINCT
+  ?subject
+  ?property
+WHERE
+{
+  ?subject ?wdt_property [].
+  #?subject wdt:P279 [].
+
+  ?property wikibase:directClaim ?wdt_property.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21503250. ## type constraint
+  ?statement pq:P2309 wd:Q21514624. ## only subclass-of
+
+  FILTER NOT EXISTS {
+    ?statement pq:P2308 ?allowed_type.
+    ?subject wdt:P279* ?allowed_type.
+  }
+
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P1322)
+}

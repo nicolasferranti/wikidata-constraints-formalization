@@ -1,0 +1,25 @@
+SELECT
+?subject
+?wdt_prop
+?object
+?regular_expression
+?constraint_status
+?deprecated_reason
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_prop.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21502404. ## format constraint
+  ?statement pq:P1793 ?regular_expression.
+  
+  ?subject ?wdt_prop ?object.
+  FILTER (!regex(?object, ?regular_expression))
+  
+  FILTER NOT EXISTS {?statement pq:P2303 ?subject}.
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_prop = wdt:P3466)
+}

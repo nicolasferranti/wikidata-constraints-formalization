@@ -1,0 +1,23 @@
+## constraint specifying values that should not be used for the given property
+SELECT DISTINCT 
+?subject  ?property ?disallowed # violations of none-of constraints
+?replacement_property ?replacement_value
+?constraint_status ?deprecated_reason
+WHERE
+{
+  ?property wikibase:directClaim ?actualProperty.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q52558054. ## none-of
+  ?statement pq:P2305 ?disallowed.
+  ?subject ?actualProperty ?disallowed.
+  
+  #replacement
+  OPTIONAL {?statement pq:P6824 ?replacement_property}.
+  OPTIONAL {?statement pq:P9729 ?replacement_value}.
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?actualProperty = wdt:P39)
+}

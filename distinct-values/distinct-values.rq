@@ -1,0 +1,25 @@
+SELECT
+(GROUP_CONCAT(DISTINCT ?subject1; SEPARATOR="; ") AS ?subject)
+?wdt_prop 
+?object
+(COUNT (?object) as ?total)
+?deprecated_reason
+?constraint_status
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_prop.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21502410. ## distinct-values constraint
+  
+  ?subject1 ?wdt_prop ?object.
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  FILTER NOT EXISTS { ?statement pq:P2303 ?subject1. }
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_prop = wdt:P109)
+}
+GROUP BY ?wdt_prop ?object ?deprecated_reason ?constraint_status
+HAVING ((COUNT (?object)) > 1)

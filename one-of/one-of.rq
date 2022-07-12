@@ -1,0 +1,18 @@
+## constraint specifying values that should not be used for the given property
+SELECT DISTINCT 
+?subject ?property ?object #oneof-constraint violation
+?constraint_status ?deprecated_reason
+WHERE
+{
+  ?property wikibase:directClaim ?actualProperty.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21510859. ## one-of
+  ?subject ?actualProperty ?object.
+  FILTER NOT EXISTS {?statement pq:P2305 ?object.}
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?actualProperty = wdt:P411)
+}

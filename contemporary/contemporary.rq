@@ -1,0 +1,33 @@
+SELECT DISTINCT
+?subject 
+?wdt_property
+?object
+?wd_start_prop ?wdt_end_prop 
+(str(?subject_start) as ?t_subject_start)
+(str(?subject_end) as ?t_subject_end)
+(str(?object_start) as ?t_object_start)
+(str(?object_end) as ?t_object_end)
+WHERE
+{
+  ?wd_property wikibase:directClaim ?wdt_property.
+  ?wd_property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q25796498. ## contemporary constraint
+
+  #?subject wdt:P25 ?object.
+  ?subject ?wdt_property ?object.
+  
+  ?wd_end_prop wdt:P1647* wd:P582.
+  ?wd_end_prop wikibase:directClaim ?wdt_end_prop.
+  ?wd_end_prop wdt:P8882 [wikibase:directClaim ?wd_start_prop].
+  
+  ?subject ?wd_start_prop ?subject_start.
+  ?subject ?wdt_end_prop ?subject_end.
+  
+  ?object ?wd_start_prop ?object_start.
+  ?object ?wdt_end_prop ?object_end.
+  
+  FILTER (?subject_start > ?object_end || ?object_start > ?subject_end)
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P61)
+}

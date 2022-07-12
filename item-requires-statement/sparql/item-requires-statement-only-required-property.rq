@@ -1,0 +1,33 @@
+SELECT 
+  ?s ?wdt_property ?o
+  ?constraint_status
+  ?deprecated_reason
+  ?any_required_property
+{
+  {
+    ?property p:P2302 ?statement.
+    ?statement ps:P2302 wd:Q21503247. ## item-requires-statement constraint
+    ?statement pq:P2306 ?any_required_property.
+ 
+    ?property wikibase:directClaim ?wdt_property.
+          
+    # REQUIRED PROPERTY ONLY, NO VALUE
+    FILTER NOT EXISTS {?statement pq:P2305 []}
+        
+    ?s ?wdt_property ?o.
+  }
+        
+  FILTER NOT EXISTS 
+  {
+    ?statement pq:P2306 ?required_property.
+    ?required_property wikibase:directClaim ?wdt_required_property.
+    ?s ?wdt_required_property [].
+  }  
+  
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  FILTER NOT EXISTS { ?statement pq:P2303 ?s.}
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P833)
+}

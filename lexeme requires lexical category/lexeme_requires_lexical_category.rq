@@ -1,0 +1,17 @@
+SELECT DISTINCT
+?subject ?wdt_property ?object
+{
+  ?wd_property p:P2302 ?statement.
+  ?wd_property wikibase:directClaim ?wdt_property.
+  ?statement ps:P2302 wd:Q55819078. # lexeme requires lexical category constraint 
+  
+  ?subject ?wdt_property ?object. 
+  ?subject wikibase:lexicalCategory ?lex_cat.
+  FILTER NOT EXISTS {
+    ?statement pq:P2305 ?expected_item.
+    ?lex_cat wdt:P279* ?expected_item.
+  }
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P5187)
+}

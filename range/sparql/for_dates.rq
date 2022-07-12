@@ -1,0 +1,22 @@
+SELECT
+?subject ?wdt_property ?object
+?minimum ?maximum
+{
+  ?subject ?wdt_property ?object.
+  ## less than min or if max is not empty, greater than max
+  FILTER (?object < ?minimum || (  (!REGEX(STR(?maximum),"http://www.wikidata.org/") && (?object > ?maximum) )   ) )  
+  ?property wikibase:directClaim ?wdt_property.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21510860. ## range constraint 
+  ?statement pq:P2310 ?minimum.
+  ?statement pq:P2311 ?maximum.
+  # including exceptions
+  OPTIONAL {?statement pq:P2303 ?exception}.
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  # getting deprecated ones
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P606)
+}
