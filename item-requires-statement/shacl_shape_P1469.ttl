@@ -1,0 +1,13 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+
+# FifaPlayerId
+:P1469_ItemRequiresStatementShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P1469 ;
+	sh:property [
+    	sh:path wdt:Occupation ;
+        sh:minCount 1;
+        sh:in (wd:Q937857 wd:Q18515558 wd:Q21057452 wd:Q628099) ;
+  	] .

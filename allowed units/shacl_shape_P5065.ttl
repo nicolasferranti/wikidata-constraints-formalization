@@ -1,0 +1,16 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+
+# windSpeed
+:P5065_AllowedUnitsShape
+	a sh:NodeShape ;
+	sh:targetObjectsOf p:P5065 ;
+	sh:property [
+      	sh:path (psv:P5065 wikibase:quantityUnit) ;
+      	sh:in ( wd:Q182429) ;
+      	sh:minCount 1 ;
+    ] .

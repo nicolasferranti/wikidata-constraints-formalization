@@ -1,0 +1,13 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+
+# MobileCountryCode
+# Note: Partially represented, only when there are no separators
+:P2258_DistinctValuesShape
+	a sh:NodeShape ;
+	sh:targetObjectsOf wdt:P2258 ;
+	sh:property [
+		sh:path [sh:inversePath  wdt:P2258] ;
+	    sh:minCount 1 ;
+        sh:maxCount 1 ;
+	] .

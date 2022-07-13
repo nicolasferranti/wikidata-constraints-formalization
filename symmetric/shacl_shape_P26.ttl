@@ -1,0 +1,15 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# spouse
+:P26_SymmetricShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P26;
+	sh:property [ 
+      sh:path [sh:inversePath wdt:P26] ;
+      sh:equals wdt:P26;
+      sh:minCount 1 ;
+    ] .

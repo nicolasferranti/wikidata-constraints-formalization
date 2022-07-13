@@ -1,0 +1,14 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# ReviewedBy
+:P4032_ValueTypeConstraintShape
+	a sh:NodeShape ;
+	sh:targetObjectsOf wdt:P4032;
+	sh:or (
+        [ sh:class wd:Q5 ]
+    ) ; 
+    sh:severity sh:Violation ;

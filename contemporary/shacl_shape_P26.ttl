@@ -1,0 +1,25 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+
+# spouse
+:P26_ContemporaryShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P26;
+	sh:and (
+    	[
+          sh:property [ 
+            sh:path (wdt:P26 wdt:P569);
+            sh:lessThanOrEquals wdt:P570;
+          ]
+        ]
+      	[sh:not[
+          sh:property [ 
+            sh:path (wdt:P26 wdt:P570);
+            sh:lessThanOrEquals wdt:P569;
+          ]
+        ]]
+    );

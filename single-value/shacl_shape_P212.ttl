@@ -1,0 +1,11 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+
+# ISBN-13
+:P212_FormatConstraintShape 
+	a sh:NodeShape ; 
+	sh:targetSubjectsOf wdt:P212; 
+    sh:property [
+		sh:path (wdt:P212) ; 
+	    sh:maxCount 1 ;  
+    ] .

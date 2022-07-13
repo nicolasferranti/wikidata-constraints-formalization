@@ -1,0 +1,19 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+prefix prov:    <http://www.w3.org/ns/prov#>
+prefix dct:     <http://purl.org/dc/terms/>
+
+# ElhuyarDictionaryID
+:P6838_lexemeRequiresLanguageConstraintShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P6838 ;
+	sh:property [
+    	sh:path dct:language ;
+    	sh:minCount 1 ;
+    	sh:in (wd:Q1860 wd:Q150 wd:Q1321) ;
+  	] .

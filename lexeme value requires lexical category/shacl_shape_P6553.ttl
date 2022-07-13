@@ -1,0 +1,19 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+prefix prov:    <http://www.w3.org/ns/prov#>
+prefix dct:     <http://purl.org/dc/terms/>
+
+# PersonalPronoun
+:P6553_lexemeValueRequiresLexicalCategoryConstraintShape 
+	a sh:NodeShape ;
+	sh:targetObjectsOf wdt:P6553 ;
+	sh:property [
+    	sh:path wikibase:lexicalCategory ;
+    	sh:minCount 1 ;
+    	sh:in (wd:Q36224) ;
+  	] .

@@ -1,0 +1,16 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+
+# twitterUsername
+:P2002_OneOfQualifierValueShape 
+	a sh:NodeShape ;
+	sh:targetObjectsOf p:P2002 ;
+	sh:property [
+    	sh:path pq:1534 ;
+        sh:in (wd:Q18411409 wd:Q87406427) ;
+  	] .

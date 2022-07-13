@@ -1,0 +1,18 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+
+# Platform
+:P400_NoneOfConstraintShape
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P400;
+	sh:not [
+      sh:property [
+      	sh:path wdt:P400 ;
+      	sh:in (wd:Q2766 wd:Q2796) ;
+      ] ;
+    ].

@@ -1,0 +1,14 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# sourceCodeRepository
+:P1324_RequiredQualifiersShape 
+	a sh:NodeShape ;
+	sh:targetObjectsOf p:P1324 ;
+	sh:property [
+		sh:path pq:P8423 ;
+        sh:minCount 1 ;
+  	] .

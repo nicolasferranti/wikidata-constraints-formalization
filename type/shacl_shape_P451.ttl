@@ -1,0 +1,19 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+
+# UnmarriedPartner
+:P451_TypeConstraintShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P451;
+    sh:or (
+        [ sh:class wd:Q5 ]
+        [ sh:class wd:Q95074 ]
+        [ sh:class wd:Q13002315 ]
+        [ sh:class wd:Q4271324 ]
+        [ sh:class wd:Q178885 ]
+        [ sh:class wd:Q2239243 ]
+        [ sh:class wd:Q168658 ]
+        [ sh:class wd:Q729 ]
+    ) ;
+    sh:severity sh:Violation .

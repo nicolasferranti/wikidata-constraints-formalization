@@ -1,0 +1,11 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+
+# FamilyName
+:P734_ConflictsWithShape
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P734;
+	sh:property [
+    	sh:path wdt:P1560 ;
+        sh:maxCount 0 ;
+  	] .

@@ -1,0 +1,12 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+
+# LeopoldinaMemberID
+:P3413_FormatConstraintShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P3413;
+	sh:property [
+    	sh:path wdt:P3413 ;
+   	 	sh:pattern  "[1-9]\d{0,3}";
+   	 	sh:description "the value for this property has to correspond to a given pattern"; 
+  	] .

@@ -1,0 +1,20 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# Filmography
+:P1283_ValueRequiresStatementShape 
+	a sh:NodeShape ;
+	sh:targetSujectsOf wdt:P1283 ;
+	sh:or (
+	    [ sh:in (wd:Q1750628 wd:Q622435)    ]
+	    [
+	        sh:property [
+    	        sh:path wdt:P1283 wdt:P360 ;
+                sh:minCount 1 ;
+                sh:in (wd:Q11424) ;
+  	        ]
+	    ]
+	) .

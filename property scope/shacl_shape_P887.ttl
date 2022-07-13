@@ -1,0 +1,30 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+
+# basedOnHeuristic
+:P887_propertyScopeReference_MainShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P887 ;
+	sh:property [
+    	sh:path wdt:P887 ;
+        sh:maxCount 0 ;
+  	] .
+
+# basedOnHeuristic
+:P887_propertyScopeReference_QualifierShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf pq:P887 ;
+	sh:property [
+    	sh:path pq:P887 ;
+        sh:maxCount 0 ;
+  	] .
+
+
+
+
+      

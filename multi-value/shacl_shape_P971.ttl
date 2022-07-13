@@ -1,0 +1,14 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# CategoryCombinesTopics
+:P971_MultiValueShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P971 ;
+	sh:property [
+    	sh:path wdt:P971 ;
+      	sh:minCount 2 ;
+    ] .

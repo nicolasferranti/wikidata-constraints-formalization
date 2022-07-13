@@ -1,0 +1,16 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# Clearance
+:P2793_RangeShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf wdt:P2793 ;
+    sh:severity sh:Violation ; 
+    sh:property [
+      	sh:path wdt:P2793;
+      	sh:minInclusive 0.0000001  ;
+		sh:maxInclusive 10000000 ;
+    ].

@@ -1,0 +1,14 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+
+# ofstedInspectionRating
+:P8480_OneOfShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P8480;
+	sh:property [
+    	sh:path ( wdt:P8480 [ sh:zeroOrMorePath wdt:P279 ] ) ;
+      	sh:in (wd:Q56675580 wd:Q56675664 wd:Q56675914 wd:Q56675918) ;
+    ] .

@@ -1,0 +1,18 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+
+# objectHasRole
+:P3831_AllowedEntityTypesShape 
+	a sh:NodeShape ;
+	sh:targetObjectsOf wdt:P3831;
+	sh:not [
+      	sh:property [
+  			sh:path [ sh:inversePath wdt:P3831 ]  ;
+        	sh:pattern "\^http://www.wikidata.org/entity/P" ;
+		]
+    ] .

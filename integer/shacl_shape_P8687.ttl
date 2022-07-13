@@ -1,0 +1,17 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+prefix xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+# SocialMediaFollowers
+:P8687_integerConstraintShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf wdt:P8687 ;
+	sh:property [
+    	sh:path wdt:P8687 ;
+        sh:datatype xsd:integer ;
+  	] .

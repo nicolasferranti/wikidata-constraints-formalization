@@ -1,0 +1,26 @@
+prefix :        <http://example.org/>
+prefix wdt:     <http://www.wikidata.org/prop/direct/>
+prefix wd:      <http://www.wikidata.org/entity/>
+prefix p:       <http://www.wikidata.org/prop/>
+prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+prefix wikibase:<http://wikiba.se/ontology#>
+prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+
+# MaximumCapacity
+:P1083_NoBoundsShape 
+	a sh:NodeShape ;
+	sh:targetObjectsOf p:P1083 ;
+	sh:and (
+    	[
+          sh:property [
+    	  	sh:path ( psv:P1083 wikibase:quantityLowerBound ); 
+	    	sh:maxCount 0 ;        
+          ]
+        ]
+      	[
+          sh:property [
+    	  	sh:path ( psv:P1083 wikibase:quantityUpperBound ); 
+	    	sh:maxCount 0 ;         
+          ]
+        ]
+    ) ;
