@@ -7,7 +7,7 @@ prefix wd:      <http://www.wikidata.org/entity/>
 	a sh:NodeShape ;
 	sh:targetSubjectsOf wdt:P1469 ;
 	sh:property [
-    	sh:path wdt:Occupation ;
+    	sh:path wdt:P106 ;
         sh:minCount 1;
         sh:in (wd:Q937857 wd:Q18515558 wd:Q21057452 wd:Q628099) ;
   	] .
