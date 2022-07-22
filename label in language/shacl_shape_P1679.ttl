@@ -7,6 +7,7 @@ prefix wikibase:<http://wikiba.se/ontology#>
 prefix psv:     <http://www.wikidata.org/prop/statement/value/>
 prefix prov:    <http://www.w3.org/ns/prov#>
 prefix dct:     <http://purl.org/dc/terms/>
+prefix sh:      <http://www.w3.org/ns/shacl#>
 
 # ArtUKArtworkID
 :P1679_LabelInLanguageShape 

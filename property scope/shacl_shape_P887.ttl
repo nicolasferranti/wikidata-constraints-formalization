@@ -5,6 +5,7 @@ prefix p:       <http://www.wikidata.org/prop/>
 prefix pq:      <http://www.wikidata.org/prop/qualifier/>
 prefix wikibase:<http://wikiba.se/ontology#>
 prefix psv:     <http://www.wikidata.org/prop/statement/value/>
+prefix sh:      <http://www.w3.org/ns/shacl#>
 
 # basedOnHeuristic
 :P887_propertyScopeReference_MainShape 
