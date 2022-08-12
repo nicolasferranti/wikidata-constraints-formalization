@@ -9,7 +9,8 @@ prefix sh:      <http://www.w3.org/ns/shacl#>
 :P4032_ValueTypeConstraintShape
 	a sh:NodeShape ;
 	sh:targetObjectsOf wdt:P4032;
-	sh:or (
-        [ sh:class wd:Q5 ]
-    ) ; 
-    sh:severity sh:Violation ;
+	sh:property [
+	    sh:path (wdt:P31 [sh:zeroOrMorePath wdt:P279]) ;
+        sh:minCount 1 ;
+        sh:hasValue wd:Q5 ;
+  	] .
