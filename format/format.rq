@@ -5,6 +5,7 @@ SELECT
 ?regular_expression
 ?constraint_status
 ?deprecated_reason
+?exception
 WHERE
 {
   ?property wikibase:directClaim ?wdt_prop.
@@ -15,7 +16,7 @@ WHERE
   ?subject ?wdt_prop ?object.
   FILTER (!regex(?object, ?regular_expression))
   
-  FILTER NOT EXISTS {?statement pq:P2303 ?subject}.
+  BIND (exists{?statement pq:P2303 ?subject} AS ?exception)
   OPTIONAL {?statement pq:P2316 ?constraint_status}.
   OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
   
