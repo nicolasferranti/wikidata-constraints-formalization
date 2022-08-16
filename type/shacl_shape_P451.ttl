@@ -1,20 +1,60 @@
-prefix :        <http://example.org/>
-prefix wdt:     <http://www.wikidata.org/prop/direct/>
-prefix wd:      <http://www.wikidata.org/entity/>
-prefix sh:      <http://www.w3.org/ns/shacl#>
+@prefix :        <http://example.org/>
+@prefix wdt:     <http://www.wikidata.org/prop/direct/>
+@prefix wd:      <http://www.wikidata.org/entity/>
+@prefix sh:      <http://www.w3.org/ns/shacl#>
 
 # UnmarriedPartner
 :P451_TypeConstraintShape 
 	a sh:NodeShape ;
 	sh:targetSubjectsOf wdt:P451;
     sh:or (
-        [ sh:class wd:Q5 ]
-        [ sh:class wd:Q95074 ]
-        [ sh:class wd:Q13002315 ]
-        [ sh:class wd:Q4271324 ]
-        [ sh:class wd:Q178885 ]
-        [ sh:class wd:Q2239243 ]
-        [ sh:class wd:Q168658 ]
-        [ sh:class wd:Q729 ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q5 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q95074 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q13002315 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q4271324 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q178885 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q2239243 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q168658 ;
+      	  ]
+        ]
+        [ sh:property [
+         	sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+            sh:minCount 1 ;
+            sh:hasValue wd:Q729 ;
+      	  ]
+        ]
     ) ;
     sh:severity sh:Violation .

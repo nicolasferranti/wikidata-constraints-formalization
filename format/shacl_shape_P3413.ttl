@@ -1,6 +1,6 @@
-prefix :        <http://example.org/>
-prefix wdt:     <http://www.wikidata.org/prop/direct/>
-prefix sh:      <http://www.w3.org/ns/shacl#>
+@prefix :        <http://example.org/>
+@prefix wdt:     <http://www.wikidata.org/prop/direct/>
+@prefix sh:      <http://www.w3.org/ns/shacl#>
 
 # LeopoldinaMemberID
 :P3413_FormatConstraintShape 
