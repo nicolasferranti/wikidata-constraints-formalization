@@ -1,5 +1,6 @@
 import requests, json, os
 
+
 def wdQuery(wdProperty):
     SPARQL_query = f"""
     SELECT DISTINCT
@@ -16,8 +17,6 @@ def wdQuery(wdProperty):
     }}  GROUP BY ?constraint_type ?pq_qualifiers ?statement
     """
 
-    print(SPARQL_query)
-
     url = "https://query.wikidata.org/sparql"
     response = requests.get(url, params={"format": "json", "query": SPARQL_query})
     data = response.json()
@@ -29,4 +28,7 @@ def wdQuery(wdProperty):
     with open(f"{resultsPath}/{wdProperty}.json", "w") as outfile:
         json.dump(data, outfile)
 
-wdQuery("P1559")
+
+# wdProperty = input('For which property would you like to generate a SHACL property shape?')
+wdProperty = "P1559"
+wdQuery(wdProperty)
