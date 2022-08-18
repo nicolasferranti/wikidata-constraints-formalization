@@ -34,7 +34,7 @@ def wdQuery(wdProperty):
         os.mkdir(resultsPath)
 
     with open(f"{resultsPath}/{wdProperty}.json", "w") as outfile:
-        json.dump(data, outfile, indent=4)
+        json.dump(data, outfile, indent=2)
 
 
 def wdPropertyConstraints(wdProperty):
