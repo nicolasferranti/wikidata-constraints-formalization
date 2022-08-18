@@ -1,6 +1,8 @@
 import requests, json, os
 from enum import Enum
 
+### Global Variables
+results_path = "./results"
 
 class PropertyConstraints(Enum):
     Q52004125 = "allowed-entity-types constraint"
@@ -30,16 +32,16 @@ def wdQuery(wdProperty):
     response = requests.get(url, params={"format": "json", "query": SPARQL_query})
     data = response.json()
 
-    if not os.path.exists(resultsPath):
-        os.mkdir(resultsPath)
+    if not os.path.exists(results_path):
+        os.mkdir(results_path)
 
-    with open(f"{resultsPath}/{wdProperty}.json", "w") as outfile:
+    with open(f"{results_path}/{wdProperty}.json", "w") as outfile:
         json.dump(data, outfile, indent=2)
 
 
 def wdPropertyConstraints(wdProperty):
     property_constraints = []
-    with open(f"{resultsPath}/{wdProperty}.json", "r") as property_file:
+    with open(f"{results_path}/{wdProperty}.json", "r") as property_file:
         property_json = json.load(property_file)
         property_file.close()
         print(f"Property {wdProperty} has the following property constraints:")
