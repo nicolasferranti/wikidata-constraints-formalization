@@ -41,6 +41,7 @@ def wdPropertyConstraints(wdProperty):
     property_constraints = []
     with open(f"{resultsPath}/{wdProperty}.json", "r") as property_file:
         property_json = json.load(property_file)
+        property_file.close()
         print(f"Property {wdProperty} has the following property constraints:")
         for item in property_json["results"]["bindings"]:
             constraint_url = item.get("constraint_type").get("value")
