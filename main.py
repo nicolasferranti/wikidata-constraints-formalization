@@ -28,6 +28,8 @@ def wdQuery(wdProperty):
     with open(f"{resultsPath}/{wdProperty}.json", "w") as outfile:
         json.dump(data, outfile)
 
+### Global Variables
+resultsPath = "./results"
 
 # wdProperty = input('For which property would you like to generate a SHACL property shape?')
 wdProperty = "P1559"
