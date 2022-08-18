@@ -1,0 +1,17 @@
+@prefix :        <http://example.org/>
+@prefix wdt:     <http://www.wikidata.org/prop/direct/>
+@prefix wd:      <http://www.wikidata.org/entity/>
+@prefix p:       <http://www.wikidata.org/prop/>
+@prefix pq:      <http://www.wikidata.org/prop/qualifier/>
+@prefix sh:      <http://www.w3.org/ns/shacl#>
+@prefix ps:      <http://www.wikidata.org/prop/statement/>
+
+# mother
+:P25_SymmetricShape 
+	a sh:NodeShape ;
+	sh:targetSubjectsOf p:P25;
+	sh:property [ 
+      sh:path ([sh:inversePath ps:P40] [sh:inversePath p:P40]) ;
+      sh:equals (p:P25 ps:P25);
+      sh:minCount 1 ;
+    ] .

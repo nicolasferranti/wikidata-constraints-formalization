@@ -1,0 +1,21 @@
+SELECT DISTINCT 
+?subject ?wdt_property
+(lang(?object) as ?language)
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_property.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q111204896. ## description in language constraint
+  ?statement pq:P424 ?language.
+  
+  ?subject ?wdt_property [].
+  
+  FILTER NOT EXISTS {
+    ?subject schema:description ?object.
+    FILTER( langMatches(lang(?object), str(?language)) )
+  }
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_property = wdt:P7789)
+}

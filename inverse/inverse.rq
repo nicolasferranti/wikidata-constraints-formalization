@@ -1,0 +1,32 @@
+SELECT
+?subject
+?property
+?object
+?inverse_property
+?constraint_status
+?deprecated_reason
+?exception
+WHERE
+{
+  ?property wikibase:claim ?p_prop.
+  ?property wikibase:statementProperty ?ps_property.
+  
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21510855. ## inverse constraint
+  ?statement pq:P2306 ?inverse_property.
+  ?inverse_property wikibase:claim ?p_inverse.
+  ?inverse_property wikibase:statementProperty ?ps_inverse.
+  
+  ?subject ?p_prop ?stmt.
+  ?stmt ?ps_property ?object.
+  
+  FILTER NOT EXISTS {?object ?p_inverse ?x. ?x ?ps_inverse ?subject}
+  
+  BIND (exists{?statement pq:P2303 ?subject} AS ?exception)
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  
+  # EXAMPLE (comment next line to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?property = wd:P25)
+}
