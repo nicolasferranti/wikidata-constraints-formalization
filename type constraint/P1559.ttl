@@ -9,78 +9,68 @@
     sh:targetSubjectsOf wdt:P1559;
     sh:or (
         
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q5 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q95074 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q2239243 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q15619164 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q21070568 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q21070598 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q64520857 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q64643615 ;
-                                    ]
-                                ]
-                                
-                                [ sh:property [
-                                        sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
-                                        sh:minCount 1 ;
-                                        sh:hasValue wd:Q75855169 ;
-                                    ]
-                                ]
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q5 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q95074 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q2239243 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q15619164 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q21070568 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q21070598 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q64520857 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q64643615 ;
+            ]
+        ]
+        
+        [ sh:property [
+                sh:path ([sh:zeroOrOnePath wdt:P31] [sh:zeroOrMorePath wdt:P279]) ;
+                sh:minCount 1 ;
+                sh:hasValue wd:Q75855169 ;
+            ]
+        ]
+        
     ) ;
     sh:severity sh:Violation .
-  
