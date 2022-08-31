@@ -1,5 +1,6 @@
 import requests, json, os
 from enum import Enum
+from abc import ABC, abstractmethod
 
 query_results = "./query results"
 
@@ -12,57 +13,105 @@ class EnumPropertyConstraints(Enum):
     Q21503250 = "type constraint"
 
 
-class WD_Prop:
+class WdDataExtractor(ABC):  # Abstract class for querying wikidata
+    @abstractmethod
+    def extractPropertyConstraints(self, pid):
+        pass
+
+
+class ConstraintType(ABC):  # Abstract class for all constraints
+    @abstractmethod
+    def toShacl(self):
+        pass
+
+
+class WdToShaclController:
     def __init__(self, pid):
         self.pid = pid
+        self.query = self.WdQuery()
 
-        self.wd_data_extractor(self.pid)
+    class WdQuery(WdDataExtractor):
+        def extractPropertyConstraints(self, pid):
+            SPARQL_query = f"""
+SELECT DISTINCT
+    ?statement ?constraint_type ?pq_qualifiers
+    (GROUP_CONCAT(DISTINCT ?val; SEPARATOR=", ") AS ?object_val)
+{{
+    wd:{pid} p:P2302 ?statement .
+    # [] p:P2302 ?statement . # TIMEOUT
+    ?statement ps:P2302 ?constraint_type .
+    ?statement ?pq_qualifiers [] .
+    [] wikibase:qualifier ?pq_qualifiers .
+    OPTIONAL {{?statement ?pq_qualifiers ?val}}
+}}  GROUP BY ?constraint_type ?pq_qualifiers ?statement
+"""
 
-    def wd_data_extractor(self, pid):
-        SPARQL_query = f"""
-        SELECT DISTINCT
-            ?statement ?constraint_type ?pq_qualifiers
-            (GROUP_CONCAT(DISTINCT ?val; SEPARATOR=", ") AS ?object_val)
-        {{
-            wd:{pid} p:P2302 ?statement .
-            # [] p:P2302 ?statement . # TIMEOUT
-            ?statement ps:P2302 ?constraint_type .
-            ?statement ?pq_qualifiers [] .
-            [] wikibase:qualifier ?pq_qualifiers .
+            url = "https://query.wikidata.org/sparql"
+            response = requests.get(
+                url, params={"format": "json", "query": SPARQL_query}
+            )
+            data = response.json()
 
-            OPTIONAL {{?statement ?pq_qualifiers ?val}}
-        }}  GROUP BY ?constraint_type ?pq_qualifiers ?statement
-        """
+            if not os.path.exists(query_results):
+                os.mkdir(query_results)
 
-        url = "https://query.wikidata.org/sparql"
-        response = requests.get(url, params={"format": "json", "query": SPARQL_query})
-        data = response.json()
+            with open(f"{query_results}/{pid}.json", "w") as outfile:
+                json.dump(data, outfile, indent=2)
 
-        if not os.path.exists(query_results):
-            os.mkdir(query_results)
+            WdToShaclController.extract_property_constraints(self, pid)
 
-        with open(f"{query_results}/{pid}.json", "w") as outfile:
-            json.dump(data, outfile, indent=2)
 
-        self.extract_property_constraints(self.pid)
+class WD_Prop:
+    # def __init__(self, pid):
+    #     self.pid = pid
 
-    def extract_property_constraints(self, pid):
-        self.property_constraints = []
-        with open(f"{query_results}/{pid}.json", "r") as property_file:
-            property_json = json.load(property_file)
-            property_file.close()
-            print(f"Property {pid} has the following property constraints:")
-            for item in property_json["results"]["bindings"]:
-                constraint_url = item.get("constraint_type").get("value")
-                constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
-                for item in EnumPropertyConstraints:
-                    if (
-                        constraint == item.name
-                        and constraint not in self.property_constraints
-                    ):
-                        self.property_constraints.append(constraint)
-                        print(f"◆ {item.value}")
-        self.shacl_generate(self.pid, property_json, self.property_constraints)
+    #     self.wd_data_extractor(self.pid)
+
+    # def wd_data_extractor(self, pid):
+    #     SPARQL_query = f"""
+    #     SELECT DISTINCT
+    #         ?statement ?constraint_type ?pq_qualifiers
+    #         (GROUP_CONCAT(DISTINCT ?val; SEPARATOR=", ") AS ?object_val)
+    #     {{
+    #         wd:{pid} p:P2302 ?statement .
+    #         # [] p:P2302 ?statement . # TIMEOUT
+    #         ?statement ps:P2302 ?constraint_type .
+    #         ?statement ?pq_qualifiers [] .
+    #         [] wikibase:qualifier ?pq_qualifiers .
+
+    #         OPTIONAL {{?statement ?pq_qualifiers ?val}}
+    #     }}  GROUP BY ?constraint_type ?pq_qualifiers ?statement
+    #     """
+
+    #     url = "https://query.wikidata.org/sparql"
+    #     response = requests.get(url, params={"format": "json", "query": SPARQL_query})
+    #     data = response.json()
+
+    #     if not os.path.exists(query_results):
+    #         os.mkdir(query_results)
+
+    #     with open(f"{query_results}/{pid}.json", "w") as outfile:
+    #         json.dump(data, outfile, indent=2)
+
+    #     self.extract_property_constraints(self.pid)
+
+    # def extract_property_constraints(self, pid):
+    #     self.property_constraints = []
+    #     with open(f"{query_results}/{pid}.json", "r") as property_file:
+    #         property_json = json.load(property_file)
+    #         property_file.close()
+    #         print(f"Property {pid} has the following property constraints:")
+    #         for item in property_json["results"]["bindings"]:
+    #             constraint_url = item.get("constraint_type").get("value")
+    #             constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
+    #             for item in EnumPropertyConstraints:
+    #                 if (
+    #                     constraint == item.name
+    #                     and constraint not in self.property_constraints
+    #                 ):
+    #                     self.property_constraints.append(constraint)
+    #                     print(f"◆ {item.value}")
+    #     self.shacl_generate(self.pid, property_json, self.property_constraints)
 
     def shacl_generate(self, pid, property_json, property_constraints):
         for item in property_constraints:
@@ -135,4 +184,5 @@ if __name__ == "__main__":
     # wd_prop = WD_Prop(
     #     input("For which property would you like to generate a SHACL property shape?\n> ")
     # )
-    wd_prop = WD_Prop("P1559")
+    wd_prop = WdToShaclController("P1559")
+    wd_prop.query.extractPropertyConstraints("P1559")
