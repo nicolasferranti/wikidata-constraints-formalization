@@ -1,4 +1,4 @@
-import requests, json, os
+import requests, json, os, sys
 from enum import Enum
 from abc import ABC, abstractmethod
 
@@ -57,8 +57,6 @@ SELECT DISTINCT
 
             with open(f"{query_results}/{pid}.json", "w") as outfile:
                 json.dump(data, outfile, indent=2)
-
-            WdToShaclController.extract_property_constraints(self, pid)
 
 
 class WD_Prop:
@@ -181,8 +179,16 @@ class PropertyConstraints:
 
 
 if __name__ == "__main__":
-    # wd_prop = WD_Prop(
-    #     input("For which property would you like to generate a SHACL property shape?\n> ")
-    # )
-    wd_prop = WdToShaclController("P1559")
-    wd_prop.query.extractPropertyConstraints("P1559")
+    opts = [opt for opt in sys.argv[1:] if opt.startswith("-")]
+    args = [arg for arg in sys.argv[1:] if not arg.startswith("-")]
+
+    if "-p" in opts:
+        value = args[0]
+    else:
+        # value = WD_Prop(
+        #     input("For which property would you like to generate a SHACL property shape?\n> ")
+        # )
+        value = "P1559"
+
+    wd_prop = WdToShaclController(value)
+    wd_prop.query.extractPropertyConstraints(value)
