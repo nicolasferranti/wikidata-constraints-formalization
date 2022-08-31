@@ -1,4 +1,4 @@
-import requests, json, os, sys
+import requests, json, os, argparse
 from enum import Enum
 from abc import ABC, abstractmethod
 
@@ -179,16 +179,20 @@ class PropertyConstraints:
 
 
 if __name__ == "__main__":
-    opts = [opt for opt in sys.argv[1:] if opt.startswith("-")]
-    args = [arg for arg in sys.argv[1:] if not arg.startswith("-")]
-
-    if "-p" in opts:
-        value = args[0]
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-p",
+        "--property",
+        type=str,
+        help="WD property to generate SHACL property shapes for",
+    )
+    args = parser.parse_args()
+    if args.property:
+        value = args.property
     else:
-        # value = WD_Prop(
-        #     input("For which property would you like to generate a SHACL property shape?\n> ")
-        # )
-        value = "P1559"
+        value = input(
+            "For which property would you like to generate a SHACL property shape?\n> "
+        )
 
     wd_prop = WdToShaclController(value)
     wd_prop.query.extractPropertyConstraints(value)
