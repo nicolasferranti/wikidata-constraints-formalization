@@ -6,11 +6,29 @@ from constraints import *
 query_results = "./query results"
 
 
+def read_json(dir, fname):
+    with open(f"{dir}/{fname}.json", "r") as property_file:
+        return json.load(property_file)
+
+
+def dump_json(dir, fname, data):
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+
+    with open(f"{dir}/{fname}.json", "w") as outfile:
+        json.dump(data, outfile, indent=2)
+
+
+def write_file(dir, fname, data):
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+
+    with open(f"{dir}/{fname}.ttl", "w") as outfile:
+        outfile.write(data)
+
+
 class EnumPropertyConstraints(Enum):
-    Q52004125 = "allowed entity types constraint"
-    Q21510851 = "allowed qualifiers constraint"
     Q21503247 = "item-requires-statement constraint"
-    Q53869507 = "property scope constraint"
     Q21503250 = "type constraint"
 
 
@@ -44,53 +62,39 @@ SELECT DISTINCT
         url = "https://query.wikidata.org/sparql"
         response = requests.get(url, params={"format": "json", "query": SPARQL_query})
         data = response.json()
-
-        if not os.path.exists(query_results):
-            os.mkdir(query_results)
-
-        with open(f"{query_results}/{pid}.json", "w") as outfile:
-            json.dump(data, outfile, indent=2)
+        dump_json(query_results, pid, data)
 
         property_constraints = []
-        with open(f"{query_results}/{pid}.json", "r") as property_file:
-            property_json = json.load(property_file)
+        property_json = read_json(query_results, pid)
 
-        if args.verbose:
-            print(f"Property {pid} has the following property constraints:")
-            for item in property_json["results"]["bindings"]:
-                constraint_url = item.get("constraint_type").get("value")
-                constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
-                for item in EnumPropertyConstraints:
-                    if (
-                        constraint == item.name
-                        and constraint not in property_constraints
-                    ):
-                        property_constraints.append(constraint)
-                        print(f"◆ {item.value}")
-        else:
-            for item in property_json["results"]["bindings"]:
-                constraint_url = item.get("constraint_type").get("value")
-                constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
-                for enum_item in EnumPropertyConstraints:
-                    if (
-                        constraint == enum_item.name
-                        and constraint not in property_constraints
-                    ):
-                        property_constraints.append(constraint)
+        print(
+            f"Property {pid} has the following property constraints:"
+        ) if args.verbose else None
+        for item in property_json["results"]["bindings"]:
+            constraint_url = item.get("constraint_type").get("value")
+            constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
+            for item in EnumPropertyConstraints:
+                if constraint == item.name and constraint not in property_constraints:
+                    property_constraints.append(constraint)
+                    print(f"◆ {item.value}") if args.verbose else None
 
         for item in property_constraints:
-            for enum_item in EnumPropertyConstraints:
-                if item == enum_item.name:
-                    match item:
-                        case "Q21503250":
-                            print(
-                                "Generating SHACL property shape for the Type Constraint"
-                            ) if args.verbose else None
-                            type_constraint = TypeConstraint()
-                            type_constraint.property = pid
-                            type_constraint.toShacl(property_json)
-                        case "Q21503247":
-                            pass
+            match item:
+                case "Q21503250":
+                    # import importlib
+                    # module = importlib.import_module(module_name)
+                    # class_ = getattr(module, class_name)
+                    # instance = class_()
+
+                    print(
+                        "Generating SHACL property shape for the Type Constraint"
+                    ) if args.verbose else None
+                    type_constraint = TypeConstraint()
+                    type_constraint.property = pid
+                    string_shacl = type_constraint.toShacl(property_json)
+                    write_file("./type constraint", pid, string_shacl)
+                case "Q21503247":
+                    pass
 
 
 if __name__ == "__main__":

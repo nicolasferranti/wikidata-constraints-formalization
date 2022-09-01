@@ -10,8 +10,7 @@ class ConstraintType(ABC):  # Abstract class for all constraints
 
 class TypeConstraint(ConstraintType):
     def __init__(self):
-        self.constraint_shacl = """
-@prefix :        <http://example.org/>
+        self.constraint_shacl = """@prefix :        <http://example.org/>
 @prefix wdt:     <http://www.wikidata.org/prop/direct/>
 @prefix wd:      <http://www.wikidata.org/entity/>
 @prefix sh:      <http://www.w3.org/ns/shacl#>
@@ -26,8 +25,9 @@ class TypeConstraint(ConstraintType):
 """
 
     def toShacl(self, property_json):
-        constraint_path = "./type constraint"
-        self.constraint_shacl = self.constraint_shacl.replace("$WD_PROPERTY$", self.property)
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", self.property
+        )
         for json_item in property_json["results"]["bindings"]:
             if (
                 json_item.get("constraint_type").get("value")[
@@ -60,8 +60,4 @@ class TypeConstraint(ConstraintType):
                     "$PROPERTY_SHACL$", ""
                 )
 
-        if not os.path.exists(constraint_path):
-            os.mkdir(constraint_path)
-
-        with open(f"{constraint_path}/{self.property}.ttl", "w") as outfile:
-            outfile.write(self.constraint_shacl)
+        return self.constraint_shacl
