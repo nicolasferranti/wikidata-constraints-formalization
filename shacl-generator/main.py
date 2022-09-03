@@ -3,8 +3,6 @@ from enum import Enum
 from abc import ABC, abstractmethod
 from constraints import *
 
-# import importlib
-
 query_results = "./query results"
 
 
@@ -66,33 +64,58 @@ SELECT DISTINCT
         data = response.json()
         dump_json(query_results, pid, data)
 
-        property_constraints = []
+        property_constraints = {}
         property_json = read_json(query_results, pid)
 
-        print(
-            f"Property {pid} has the following property constraints:"
-        ) if args.verbose else None
-        for item in property_json["results"]["bindings"]:
-            constraint_url = item.get("constraint_type").get("value")
+        for json_item in property_json["results"]["bindings"]:
+            constraint_url = json_item.get("constraint_type").get("value")
             constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
-            for item in EnumPropertyConstraints:
-                if constraint == item.value and constraint not in property_constraints:
-                    property_constraints.append(constraint)
-                    print(f"◆ {item.value}") if args.verbose else None
+            for enum_item in EnumPropertyConstraints:
+                if constraint == enum_item.value:
+                    match constraint:
+                        case "Q21503250":
+                            # Item of property constraint
+                            if (
+                                json_item.get("constraint_type").get("value")[
+                                    json_item.get("constraint_type")
+                                    .get("value")
+                                    .rfind("/Q")
+                                    + 1 :
+                                ]
+                            ) == "Q21503250" and json_item.get("pq_qualifiers").get(
+                                "value"
+                            ) == "http://www.wikidata.org/prop/qualifier/P2308":
+                                value_list = (
+                                    json_item.get("object_val").get("value").split(", ")
+                                )
+                                property_constraints["Q21503250"] = value_list
+                            # Check mandatory constraint
+                            if (
+                                json_item.get("constraint_type").get("value")[
+                                    json_item.get("constraint_type")
+                                    .get("value")
+                                    .rfind("/Q")
+                                    + 1 :
+                                ]
+                            ) == "Q21503250" and json_item.get("pq_qualifiers").get(
+                                "value"
+                            ) == "http://www.wikidata.org/prop/qualifier/P2316":
+                                if (
+                                    json_item.get("object_val").get("value")
+                                    == "http://www.wikidata.org/entity/Q21502408"
+                                ):
+                                    mandatory = 1
+                            else:
+                                mandatory = 0
 
         for item in property_constraints:
             match item:
                 case "Q21503250":
-                    # module = importlib.import_module(module_name)
-                    # class_ = getattr(module, class_name)
-                    # instance = class_()
-
-                    print(
-                        "Generating SHACL property shape for the Type Constraint"
-                    ) if args.verbose else None
                     type_constraint = TypeConstraint()
                     type_constraint.property = pid
-                    string_shacl = type_constraint.toShacl(property_json)
+                    type_constraint.value_list = property_constraints["Q21503250"]
+                    type_constraint.mandatory = mandatory
+                    string_shacl = type_constraint.toShacl()
                     write_file("./type constraint", pid, string_shacl)
                 case "Q21503247":
                     pass
@@ -106,7 +129,7 @@ if __name__ == "__main__":
         type=str,
         help="WD property to generate SHACL property shapes for",
     )
-    parser.add_argument("-v", "--verbose", help="Verbose output", action="store_true")
+    # parser.add_argument("-v", "--verbose", help="Verbose output", action="store_true")
     args = parser.parse_args()
     if args.property:
         string_pid = args.property

@@ -1,0 +1,158 @@
+{
+  "head": {
+    "vars": [
+      "statement",
+      "constraint_type",
+      "pq_qualifiers",
+      "object_val"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q52004125"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2305"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-0eca6d3a-4a5d-7dcc-b110-26ece46d4028"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/Q29934200"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q21503247"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2241"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-aa5e12fd-4ed1-512b-3be8-e06801a0c339"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/Q99460987"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q21503247"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2316"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-aa5e12fd-4ed1-512b-3be8-e06801a0c339"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/Q62026391"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q21503247"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2306"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-aa5e12fd-4ed1-512b-3be8-e06801a0c339"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/P103"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q21503250"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2309"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-F4101110-AB60-4445-9E44-1ACB8D9D9F18"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/Q21503252"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q21503250"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2308"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-F4101110-AB60-4445-9E44-1ACB8D9D9F18"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/Q5, http://www.wikidata.org/entity/Q95074, http://www.wikidata.org/entity/Q2239243, http://www.wikidata.org/entity/Q15619164, http://www.wikidata.org/entity/Q21070568, http://www.wikidata.org/entity/Q21070598, http://www.wikidata.org/entity/Q64520857, http://www.wikidata.org/entity/Q64643615, http://www.wikidata.org/entity/Q75855169"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q21510851"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P2306"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-5196AE5F-A10D-4C62-B934-35C77B5A028C"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/P138, http://www.wikidata.org/entity/P282, http://www.wikidata.org/entity/P407, http://www.wikidata.org/entity/P443, http://www.wikidata.org/entity/P580, http://www.wikidata.org/entity/P582, http://www.wikidata.org/entity/P585, http://www.wikidata.org/entity/P642, http://www.wikidata.org/entity/P828, http://www.wikidata.org/entity/P898, http://www.wikidata.org/entity/P1319, http://www.wikidata.org/entity/P1326, http://www.wikidata.org/entity/P1480, http://www.wikidata.org/entity/P1534, http://www.wikidata.org/entity/P1552, http://www.wikidata.org/entity/P1721, http://www.wikidata.org/entity/P1814, http://www.wikidata.org/entity/P1942, http://www.wikidata.org/entity/P2001, http://www.wikidata.org/entity/P2125, http://www.wikidata.org/entity/P2183, http://www.wikidata.org/entity/P2241, http://www.wikidata.org/entity/P2440, http://www.wikidata.org/entity/P2719, http://www.wikidata.org/entity/P3831, http://www.wikidata.org/entity/P3938, http://www.wikidata.org/entity/P4187, http://www.wikidata.org/entity/P4188, http://www.wikidata.org/entity/P4189, http://www.wikidata.org/entity/P4970, http://www.wikidata.org/entity/P5139, http://www.wikidata.org/entity/P5276, http://www.wikidata.org/entity/P7452, http://www.wikidata.org/entity/P8017, http://www.wikidata.org/entity/P8554, http://www.wikidata.org/entity/P8555, http://www.wikidata.org/entity/P8991, http://www.wikidata.org/entity/P9311, http://www.wikidata.org/entity/P10663, http://www.wikidata.org/entity/P10694"
+        }
+      },
+      {
+        "constraint_type": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/Q53869507"
+        },
+        "pq_qualifiers": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/prop/qualifier/P5314"
+        },
+        "statement": {
+          "type": "uri",
+          "value": "http://www.wikidata.org/entity/statement/P1559-425b507e-4573-14de-52d3-ca2ce61711eb"
+        },
+        "object_val": {
+          "type": "literal",
+          "value": "http://www.wikidata.org/entity/Q54828448"
+        }
+      }
+    ]
+  }
+}
