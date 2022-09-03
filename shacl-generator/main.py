@@ -3,6 +3,8 @@ from enum import Enum
 from abc import ABC, abstractmethod
 from constraints import *
 
+# import importlib
+
 query_results = "./query results"
 
 
@@ -28,8 +30,8 @@ def write_file(dir, fname, data):
 
 
 class EnumPropertyConstraints(Enum):
-    Q21503247 = "item-requires-statement constraint"
-    Q21503250 = "type constraint"
+    ItemRequiresStatementConstraint = "Q21503247"
+    TypeConstraint = "Q21503250"
 
 
 class WdDataExtractor(ABC):  # Abstract class for querying wikidata
@@ -74,14 +76,13 @@ SELECT DISTINCT
             constraint_url = item.get("constraint_type").get("value")
             constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
             for item in EnumPropertyConstraints:
-                if constraint == item.name and constraint not in property_constraints:
+                if constraint == item.value and constraint not in property_constraints:
                     property_constraints.append(constraint)
                     print(f"◆ {item.value}") if args.verbose else None
 
         for item in property_constraints:
             match item:
                 case "Q21503250":
-                    # import importlib
                     # module = importlib.import_module(module_name)
                     # class_ = getattr(module, class_name)
                     # instance = class_()
