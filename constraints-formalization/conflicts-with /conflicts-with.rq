@@ -1,0 +1,32 @@
+SELECT
+?subject
+?property # main property
+?target_property # conflitant property
+?entity # optional conflitant object 
+?replacement_property
+?replacement_value
+?deprecated_reason
+?constraint_status
+WHERE
+{
+  ?property wikibase:directClaim ?wdt_prop.
+  ?property p:P2302 ?statement.
+  ?statement ps:P2302 wd:Q21502838. ## conflicts-with constraint
+  ?statement pq:P2306/wikibase:directClaim ?target_property .
+  OPTIONAL {?statement pq:P2305 ?entity}.
+  
+  ?subject ?wdt_prop ?object.
+  ?subject ?target_property ?entity.
+  
+  #replacement data, for analysis
+  OPTIONAL {?statement pq:P6824 ?replacement_property}.
+  OPTIONAL {?statement pq:P9729 ?replacement_value}.
+    
+  OPTIONAL {?statement pq:P2316 ?constraint_status}.
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}.
+  FILTER NOT EXISTS { ?statement pq:P2303 ?subject.}
+  
+  # EXAMPLE (comment next line clause to query all violations for all properties of this type...)
+  # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
+  FILTER (?wdt_prop = wdt:P5842)
+}

@@ -2,6 +2,7 @@ import requests, json, os, argparse
 from enum import Enum
 from abc import ABC, abstractmethod
 from constraints import *
+from wikidataDataExtractor import WikidataOnlineEndpointExtractor
 
 query_results = "./query results"
 
@@ -32,96 +33,73 @@ class EnumPropertyConstraints(Enum):
     TypeConstraint = "Q21503250"
 
 
-class WdDataExtractor(ABC):  # Abstract class for querying wikidata
-    @abstractmethod
-    def extractPropertyConstraints(self, pid):
-        pass
+class WdToShaclController():
+    def __init__(self):
 
+        self.wikidataDataExtractor = WikidataOnlineEndpointExtractor()
 
-class WdToShaclController(WdDataExtractor):
-    def __init__(self, pid):
-        self.pid = pid
+    def getDictQualifierValue(self,constraint_detail):
+        dict = {"pq_qualifiers": constraint_detail["pq_qualifiers"]["value"],
+                "object_val": [constraint_detail["object_val"]["value"]]}
+        return dict
 
-        self.extractPropertyConstraints(self.pid)
+    def parseQueryDataToDict(self, query_data):
+        data = query_data["results"]["bindings"]
 
-    def extractPropertyConstraints(self, pid):
-        SPARQL_query = f"""
-SELECT DISTINCT
-    ?statement ?constraint_type ?pq_qualifiers
-    (GROUP_CONCAT(DISTINCT ?val; SEPARATOR=", ") AS ?object_val)
-{{
-    wd:{pid} p:P2302 ?statement .
-    # [] p:P2302 ?statement . # TIMEOUT
-    ?statement ps:P2302 ?constraint_type .
-    ?statement ?pq_qualifiers [] .
-    [] wikibase:qualifier ?pq_qualifiers .
-    OPTIONAL {{?statement ?pq_qualifiers ?val}}
-}}  GROUP BY ?constraint_type ?pq_qualifiers ?statement
-"""
+        dict_return = {}
+        temp_dict = {}
+        qualifiers = []
+        statement_control = None
 
-        url = "https://query.wikidata.org/sparql"
-        response = requests.get(url, params={"format": "json", "query": SPARQL_query})
-        data = response.json()
-        dump_json(query_results, pid, data)
+        for constraint_detail in data:
+            statement_id = constraint_detail["statement"]["value"]
+            statement_id = statement_id[statement_id.rfind("/P") + 1:]
+            if (statement_control is None) | (statement_id != statement_control):
 
-        property_constraints = {}
-        property_json = read_json(query_results, pid)
+                if len(temp_dict) != 0:
+                    temp_dict["qualifiers"] = qualifiers
+                    dict_return[statement_control] = temp_dict
+                    temp_dict = {}
+                    qualifiers = []
 
-        for json_item in property_json["results"]["bindings"]:
-            constraint_url = json_item.get("constraint_type").get("value")
-            constraint = constraint_url[constraint_url.rfind("/Q") + 1 :]
-            for enum_item in EnumPropertyConstraints:
-                if constraint == enum_item.value:
-                    match constraint:
-                        case "Q21503250":
-                            # Item of property constraint
-                            if (
-                                json_item.get("constraint_type").get("value")[
-                                    json_item.get("constraint_type")
-                                    .get("value")
-                                    .rfind("/Q")
-                                    + 1 :
-                                ]
-                            ) == "Q21503250" and json_item.get("pq_qualifiers").get(
-                                "value"
-                            ) == "http://www.wikidata.org/prop/qualifier/P2308":
-                                value_list = (
-                                    json_item.get("object_val").get("value").split(", ")
-                                )
-                                property_constraints["Q21503250"] = value_list
-                            # Check mandatory constraint
-                            if (
-                                json_item.get("constraint_type").get("value")[
-                                    json_item.get("constraint_type")
-                                    .get("value")
-                                    .rfind("/Q")
-                                    + 1 :
-                                ]
-                            ) == "Q21503250" and json_item.get("pq_qualifiers").get(
-                                "value"
-                            ) == "http://www.wikidata.org/prop/qualifier/P2316":
-                                if (
-                                    json_item.get("object_val").get("value")
-                                    == "http://www.wikidata.org/entity/Q21502408"
-                                ):
-                                    mandatory = 1
-                            else:
-                                mandatory = 0
+                temp_dict["constraint_type"] = constraint_detail["constraint_type"]["value"]
+                statement_control = statement_id
 
-        for item in property_constraints:
-            match item:
-                case "Q21503250":
+            qualifiers.append(self.getDictQualifierValue(constraint_detail))
+
+        if statement_control is not None:
+            temp_dict["qualifiers"] = qualifiers
+            dict_return[statement_control] = temp_dict
+
+        return dict_return
+
+    def run(self, pid):
+
+        query_data = self.wikidataDataExtractor.extractPropertyConstraints(pid)
+        property_json = self.parseQueryDataToDict(query_data)
+
+        shacl_constraints = {}
+
+        # the same constraint type can be used more than once, so we count to differentiate
+        count_diff_constraint = 0
+        for json_item in property_json.values():
+            constraint_url = json_item.get("constraint_type")
+            constraint = json_item.get("constraint_type")[constraint_url.rfind("/Q") + 1:]
+
+            shacl_index = str(EnumPropertyConstraints.TypeConstraint.name)+"_"+str(count_diff_constraint)
+            match constraint:
+                case EnumPropertyConstraints.TypeConstraint.value:
                     type_constraint = TypeConstraint()
-                    type_constraint.property = pid
-                    type_constraint.value_list = property_constraints["Q21503250"]
-                    type_constraint.mandatory = mandatory
-                    string_shacl = type_constraint.toShacl()
-                    write_file("./type constraint", pid, string_shacl)
-                case "Q21503247":
-                    pass
+                    shacl_constraints[shacl_index] = type_constraint.toShacl(pid=pid, qualifiers=json_item.get("qualifiers"))
+
+            count_diff_constraint += 1
 
 
 if __name__ == "__main__":
+    controller = WdToShaclController()
+    # test: P6 and P578 (no property constraint)
+    controller.run("P6")
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-p",
