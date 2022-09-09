@@ -3,6 +3,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 from constraints import *
 from wikidataDataExtractor import WikidataOnlineEndpointExtractor
+from pprint import pprint
 
 query_results = "./query results"
 
@@ -29,18 +30,20 @@ def write_file(dir, fname, data):
 
 
 class EnumPropertyConstraints(Enum):
+    FormatConstraint = "Q21502404"
     ItemRequiresStatementConstraint = "Q21503247"
     TypeConstraint = "Q21503250"
 
 
 class WdToShaclController():
-    def __init__(self):
+    def __init__(self, save_file):
 
+        self.save_to_file = save_file
         self.wikidataDataExtractor = WikidataOnlineEndpointExtractor()
 
     def getDictQualifierValue(self,constraint_detail):
         dict = {"pq_qualifiers": constraint_detail["pq_qualifiers"]["value"],
-                "object_val": [constraint_detail["object_val"]["value"]]}
+                "object_val": constraint_detail["object_val"]["value"].split(",")}
         return dict
 
     def parseQueryDataToDict(self, query_data):
@@ -88,32 +91,52 @@ class WdToShaclController():
 
             shacl_index = str(EnumPropertyConstraints.TypeConstraint.name)+"_"+str(count_diff_constraint)
             match constraint:
+                case EnumPropertyConstraints.FormatConstraint:
+                    format_constraint = FormatConstraint()
                 case EnumPropertyConstraints.TypeConstraint.value:
                     type_constraint = TypeConstraint()
                     shacl_constraints[shacl_index] = type_constraint.toShacl(pid=pid, qualifiers=json_item.get("qualifiers"))
 
             count_diff_constraint += 1
 
+        output = ""
+        for const in shacl_constraints:
+            output += shacl_constraints[const]
+
+        if self.save_to_file:
+            write_file("./type constraint", pid, output)
+        else:
+            pprint(output)
 
 if __name__ == "__main__":
-    controller = WdToShaclController()
-    # test: P6 and P578 (no property constraint)
-    controller.run("P6")
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-p",
-        "--property",
+        "-pid",
+        "--property_id",
         type=str,
-        help="WD property to generate SHACL property shapes for",
+        help="WD property ID to generate SHACL property shapes for"
     )
+
+    parser.add_argument(
+        "-s",
+        "--save",
+        type=bool,
+        help="flag that indicates whether the output should be saved or not. If not save, then it is printed to std out"
+    )
+
     # parser.add_argument("-v", "--verbose", help="Verbose output", action="store_true")
     args = parser.parse_args()
-    if args.property:
-        string_pid = args.property
-    else:
-        string_pid = input(
+    if args.property_id is None:
+        args.property_id = input(
             "For which property would you like to generate a SHACL property shape?\n> "
         )
 
-    wd_prop = WdToShaclController(string_pid)
+    if args.save is None:
+        args.save = input(
+            "Type True to save the output into a file or False to print the output\n> "
+        )
+        args.save = (args.save == "True")
+
+    controller = WdToShaclController(save_file=args.save)
+    # test: P6 and P578 (no property constraint)
+    controller.run(args.property_id)
