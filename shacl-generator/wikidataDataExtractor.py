@@ -30,7 +30,7 @@ class WikidataOnlineEndpointExtractor(WdDataExtractor):
         SPARQL_query = f"""
                     SELECT DISTINCT
                         ?statement ?constraint_type ?pq_qualifiers
-                        (GROUP_CONCAT(DISTINCT ?val; SEPARATOR=", ") AS ?object_val)
+                        (GROUP_CONCAT(DISTINCT ?val; SEPARATOR="|#@$| ") AS ?object_val)
                     {{
                         wd:{pid} p:P2302 ?statement .
                         # [] p:P2302 ?statement . # TIMEOUT

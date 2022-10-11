@@ -1,12 +1,6 @@
 from abc import ABC, abstractmethod
-from enum import Enum
+from utils import *
 import os
-
-class EnumQualifiersID(Enum):
-    relation_qualifier = "P2309"
-    class_qualifier = "P2308"
-    constraint_status_qualifier = "P2316"
-    format_as_a_regular_expression = "P1793"
 
 class ConstraintType(ABC):  # Abstract class for all constraints
     @abstractmethod
@@ -21,11 +15,6 @@ class ConstraintType(ABC):  # Abstract class for all constraints
 class TypeConstraint(ConstraintType):
     def __init__(self):
         self.constraint_shacl = """
-            @prefix :        <http://example.org/>.
-            @prefix wdt:     <http://www.wikidata.org/prop/direct/>.
-            @prefix wd:      <http://www.wikidata.org/entity/>.
-            @prefix sh:      <http://www.w3.org/ns/shacl#>.
-
             :$WD_PROPERTY$_TypeConstraintShape 
                 a sh:NodeShape ;
                 sh:targetSubjectsOf wdt:$WD_PROPERTY$;
@@ -96,62 +85,58 @@ class TypeConstraint(ConstraintType):
         return self.constraint_shacl
 
     def getRequiredPrefixes(self):
-        pass
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.wd_prefix, EnumPrefixes.sh_prefix]
 
-    class FormatConstraint(ConstraintType):
-        def __init__(self):
-            self.constraint_shacl = """
-                @prefix :        <http://example.org/>.
-                @prefix wdt:     <http://www.wikidata.org/prop/direct/>.
-                @prefix sh:      <http://www.w3.org/ns/shacl#>.
 
-                :$WD_PROPERTY$_FormatConstraintShape 
-                    a sh:NodeShape ;
-                    sh:targetSubjectsOf wdt:$WD_PROPERTY$;
-                    sh:property [
-                        sh:path wdt:$WD_PROPERTY$ ;
-                        sh:pattern  "$REGULAR_EXPRESSION$";
-                        sh:description "the value for this property has to correspond to a given pattern"; 
-                    ] ;
-                    $MANDATORY$
-            """
+class FormatConstraint(ConstraintType):
+    def __init__(self):
+        self.constraint_shacl = """
+            :$WD_PROPERTY$_FormatConstraintShape 
+                a sh:NodeShape ;
+                sh:targetSubjectsOf wdt:$WD_PROPERTY$;
+                sh:property [
+                    sh:path wdt:$WD_PROPERTY$ ;
+                    sh:pattern  "$REGULAR_EXPRESSION$";
+                    sh:description "the value for this property has to correspond to a given pattern"; 
+                ] ;
+                $MANDATORY$
+        """
 
-        def toShacl(self, pid, qualifiers):
+    def toShacl(self, pid, qualifiers):
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", pid
+        )
+
+        regular_expression = ""
+        mandatory = False
+        for qualifier in qualifiers:
+            qid = qualifier.get("pq_qualifiers")
+            qid = qid[qid.rfind("/P") + 1:]
+            match qid:
+                ## P1793 FORMAT AS A REGULAR EXPRESSION
+                case EnumQualifiersID.format_as_a_regular_expression_qualifier.value:
+                    regular_expression = qualifier.get("object_val")[0]
+                ## P2316 CONSTRAINT STATUS
+                case EnumQualifiersID.constraint_status_qualifier.value:
+                    if qualifier.get("object_val")[0] == "https://www.wikidata.org/wiki/Q21502408":
+                        mandatory = True
+
+        if regular_expression == "":
+            raise Exception("Format constraint has no regular expression. PID:" + str(pid))
+
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$REGULAR_EXPRESSION$", regular_expression
+        )
+        if mandatory:
             self.constraint_shacl = self.constraint_shacl.replace(
-                "$WD_PROPERTY$", pid
+                "$MANDATORY$", "sh:severity sh:Violation ."
+            )
+        else:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Warning ."
             )
 
-            ## TODO TEST
-            regular_expression = ""
-            mandatory = False
-            for qualifier in qualifiers:
-                qid = qualifier.get("pq_qualifiers")
-                qid = qid[qid.rfind("/P") + 1:]
-                match qid:
-                    ## P1793 RELATION
-                    case EnumQualifiersID.format_as_a_regular_expression:
-                        regular_expression = qualifier.get("object_val")[0]
-                    ## P2316 CONSTRAINT STATUS
-                    case EnumQualifiersID.constraint_status_qualifier.value:
-                        if qualifier.get("object_val")[0] == "https://www.wikidata.org/wiki/Q21502408":
-                            mandatory = True
+        return self.constraint_shacl
 
-            if regular_expression == "":
-                raise Exception("Format constraint has no regular expression. PID:" + str(pid))
-
-            self.constraint_shacl = self.constraint_shacl.replace(
-                "$REGULAR_EXPRESSION$", regular_expression
-            )
-            if mandatory:
-                self.constraint_shacl = self.constraint_shacl.replace(
-                    "$MANDATORY$", "sh:severity sh:Violation ."
-                )
-            else:
-                self.constraint_shacl = self.constraint_shacl.replace(
-                    "$MANDATORY$", "sh:severity sh:Warning ."
-                )
-
-            return self.constraint_shacl
-
-        def getRequiredPrefixes(self):
-            pass
+    def getRequiredPrefixes(self):
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.sh_prefix]

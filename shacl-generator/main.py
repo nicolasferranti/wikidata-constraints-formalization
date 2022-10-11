@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from constraints import *
 from wikidataDataExtractor import WikidataOnlineEndpointExtractor
 from pprint import pprint
+import time
 
 query_results = "./query results"
 
@@ -25,13 +26,15 @@ def write_file(dir, fname, data):
     if not os.path.exists(dir):
         os.mkdir(dir)
 
-    with open(f"{dir}/{fname}.ttl", "w") as outfile:
+    nanotime = str(time.time_ns())
+
+    with open(f"{dir}/{fname}_{nanotime}.ttl", "w") as outfile:
         outfile.write(data)
 
 
 class EnumPropertyConstraints(Enum):
     FormatConstraint = "Q21502404"
-    ItemRequiresStatementConstraint = "Q21503247"
+    # ItemRequiresStatementConstraint = "Q21503247"
     TypeConstraint = "Q21503250"
 
 
@@ -41,9 +44,9 @@ class WdToShaclController():
         self.save_to_file = save_file
         self.wikidataDataExtractor = WikidataOnlineEndpointExtractor()
 
-    def getDictQualifierValue(self,constraint_detail):
+    def getDictQualifierValue(self, constraint_detail):
         dict = {"pq_qualifiers": constraint_detail["pq_qualifiers"]["value"],
-                "object_val": constraint_detail["object_val"]["value"].split(",")}
+                "object_val": constraint_detail["object_val"]["value"].split("|#@$|")}
         return dict
 
     def parseQueryDataToDict(self, query_data):
@@ -76,37 +79,74 @@ class WdToShaclController():
 
         return dict_return
 
+    def get_class(self, kls):
+        parts = kls.split('.')
+        module = ".".join(parts[:-1])
+        m = __import__(module)
+        for comp in parts[1:]:
+            m = getattr(m, comp)
+        return m
+
+    def prefixes_2_ttl(self, prefixes: list):
+        output = ""
+        for prefix in prefixes:
+            output += "@prefix " + prefix.value.getPrefix() + ": <" + prefix.value.getNamespace() + ">. \n"
+        return output
+
     def run(self, pid):
 
         query_data = self.wikidataDataExtractor.extractPropertyConstraints(pid)
         property_json = self.parseQueryDataToDict(query_data)
 
-        shacl_constraints = {}
+        shacl_constraints = []
+        prefixes = []
 
         # the same constraint type can be used more than once, so we count to differentiate
-        count_diff_constraint = 0
+
         for json_item in property_json.values():
             constraint_url = json_item.get("constraint_type")
             constraint = json_item.get("constraint_type")[constraint_url.rfind("/Q") + 1:]
 
-            shacl_index = str(EnumPropertyConstraints.TypeConstraint.name)+"_"+str(count_diff_constraint)
+            if constraint in EnumPropertyConstraints._value2member_map_:
+                constraint_class_name = EnumPropertyConstraints(constraint).name
+                constraint_class_name = "constraints." + constraint_class_name
+                clss = self.get_class(constraint_class_name)
+                obj = clss()
+                shacl_constraints.append(obj.toShacl(pid=pid, qualifiers=json_item.get("qualifiers")))
+                prefixes = list(set(prefixes + obj.getRequiredPrefixes()))
+
+            """
+            try:
+                constraint_func = constraints_delegate[constraint]
+                shacl_constraints[shacl_index] = constraint_func.toShacl(pid=pid, qualifiers=json_item.get("qualifiers"))
+            except KeyError:
+                pass
+            """
+
+            """
             match constraint:
-                case EnumPropertyConstraints.FormatConstraint:
+                case EnumPropertyConstraints.FormatConstraint.value:
                     format_constraint = FormatConstraint()
+                    shacl_constraints[shacl_index] = format_constraint.toShacl(pid=pid, qualifiers=json_item.get("qualifiers"))
                 case EnumPropertyConstraints.TypeConstraint.value:
                     type_constraint = TypeConstraint()
                     shacl_constraints[shacl_index] = type_constraint.toShacl(pid=pid, qualifiers=json_item.get("qualifiers"))
 
             count_diff_constraint += 1
+            """
 
         output = ""
         for const in shacl_constraints:
-            output += shacl_constraints[const]
+            output += const
+
+        ttl_prefixes = self.prefixes_2_ttl(prefixes)
+        output = ttl_prefixes + output
 
         if self.save_to_file:
-            write_file("./type constraint", pid, output)
+            write_file("./shacl constraints", pid, output)
         else:
-            pprint(output)
+            print(output, end="\n")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
