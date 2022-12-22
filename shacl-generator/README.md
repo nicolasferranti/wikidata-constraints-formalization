@@ -23,7 +23,7 @@ This tool is meant to generate SHACL property shapes for WD properties, using Ni
 - [ ] description in language constraint
 - [ ] difference-within-range constraint
 - [ ] distinct-values constraint
-- [ ] format constraint
+- [x] format constraint
 - [ ] integer constraint
 - [ ] item-requires-statement constraint
 - [ ] label in language constraint
