@@ -1,4 +1,4 @@
-# Nore that allowed-qualiier-constraints are actually NOT SHACL-Core expressible. The following uses a "trick" to 
+# Note that allowed-qualiier-constraints are actually NOT SHACL-Core expressible. The following uses a "trick" to 
 # enforce the allowed qualiefiers only by disallowing the all remaining (non-allowed) qualifiers.
 # One problem here is that other properties might be possible, but only qualifier properties should be excluded.
 # While this is expressible in SPARQL, such additional constraints on the actual path are beyond the expressivity of SHACL.
