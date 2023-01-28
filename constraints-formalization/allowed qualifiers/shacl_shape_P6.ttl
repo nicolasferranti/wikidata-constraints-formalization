@@ -1,9 +1,14 @@
-@prefix :        <http://example.org/>
-@prefix wdt:     <http://www.wikidata.org/prop/direct/>
-@prefix wd:      <http://www.wikidata.org/entity/>
-@prefix p:       <http://www.wikidata.org/prop/>
-@prefix pq:      <http://www.wikidata.org/prop/qualifier/>
-@prefix sh:     <http://www.w3.org/ns/shacl#> 
+# Nore that allowed-qualiier-constraints are actually NOT SHACL-Core expressible. The following uses a "trick" to 
+# enforce the allowed qualiefiers only by disallowing the all remaining (non-allowed) qualifiers.
+# One problem here is that other properties might be possible, but only qualifier properties should be excluded.
+# While this is expressible in SPARQL, such additional constraints on the actual path are beyond the expressivity of SHACL.
+
+@prefix :        <http://example.org/> .
+@prefix wdt:     <http://www.wikidata.org/prop/direct/> .
+@prefix wd:      <http://www.wikidata.org/entity/> .
+@prefix p:       <http://www.wikidata.org/prop/> .
+@prefix pq:      <http://www.wikidata.org/prop/qualifier/> .
+@prefix sh:     <http://www.w3.org/ns/shacl#> .
 
 # HeadOfGovernment
 :P6_AllowedQualifiersShape 
@@ -300,4 +305,4 @@
                   ] ;
           sh:minCount 1 ;
       ]
-	]
+	] .
