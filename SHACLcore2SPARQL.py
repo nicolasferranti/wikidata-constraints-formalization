@@ -1,4 +1,3 @@
-
 import sys
 import requests
 import rdflib
@@ -70,26 +69,31 @@ def rewritePropertyShape(current_subject,current_target,g):
     triples = list(g.triples((current_subject,SH.maxCount,None)))
     if(len(triples)):
         assert(len(triples)==1) #there should be max 1 sh:maxCount per property shape
-        maxCount=inst(str(triples[0][2]))
+        maxCount=int(str(triples[0][2]))
         #Hint: MaxCount < 0  does't make sense
         assert( maxCount >=0 )
  
     if (minCount>=1 or maxCount>=0):
         cnt_var = "?CNT"+str(current_target)
-        query_new = "{ SELECT COUNT(*) AS "+cnt_var+") WHERE { "+target+" "+path+" "+val+" } HAVING ( " 
-        if(maxCount >=0):
-            # TODO: I think maxCount = 0 is a non-exists, i.e. should be replaced by sh:not:
-            if(maxCount == 0):
-                print("WARNING: TODO: I think maxCount = 0 is a non-exists, i.e. should be replaced by sh:not!")
-            query_new += (cnt_var+" >= "+str(maxCount))  
-        if(maxCount >=0 and minCount >=1):
+        query_new = "{ SELECT ( COUNT(*) AS "+cnt_var+") WHERE { "+target+" "+path+" "+val+" } } FILTER ( " 
+        if(maxCount > 0):
+            query_new += (cnt_var+" <= "+str(maxCount))  
+        if(maxCount > 0 and minCount >=1):
             query_new += " && "
         if(minCount >=1):
-            query_new += (cnt_var+" <= "+str(minCount))
-        query_new += ")"
-    if (minCount>1 or maxCount>=0):
-        # we don't nee the complicated HAVING COUNT query for only minCount > 1... in that case it suffices to check for path existence.
+            query_new += (cnt_var+" >= "+str(minCount))
+        query_new += ") "
+
+    if (minCount>1 or maxCount>0):
+        # we don't nee the complicated FILTER COUNT query for only minCount > 1... in that case it suffices to check for path existence.
         query = query_new
+
+    # TODO: As per the SHACL spec maxCount = 0 should be treated as negation, i.e. should be replaced by sh:not...
+    # TODO: What happens if minCount > maxCount
+    if(maxCount == 0):
+        print("#### WARNING: TODO: maxCount = 0 is boiling down to a simple NOT EXISTS, However, we need to copy the target pattern for this case, otherwise it does") 
+        print("###           not work, i.e.,SPARQL does not do well with directly nested FILTER NOT EXISTS, due to the evaluation mechanics of SPARQL!")
+        query = " FILTER NOT EXISTS { "+ query +" }  " 
 
         #sh:class : rdfs:Resource
         #sh:datatype : rdfs:Resource
@@ -98,7 +102,9 @@ def rewritePropertyShape(current_subject,current_target,g):
         #sh:description : xsd:string or rdf:langString
         #sh:defaultValue : any
         #sh:group : sh:PropertyGroup
-
+        
+        
+        
     return query
         
 
@@ -198,8 +204,6 @@ def MyShacl2Sparql(url, format="turtle"):
             target_defs += 1
             target_pattern += "?T1 <"+str(t[2])+"> [] . "
             current_subject = t[0]
-            current_subject = 1
-
     assert(target_defs == 1) # there should only be one target definition! TODO:maybe if we wanted to allow SHAPE files that have several shapes, we should generalize this!
     assert(current_subject)
 
@@ -208,8 +212,10 @@ def MyShacl2Sparql(url, format="turtle"):
         query += "PREFIX "+ns+":"+serializeRDFTerm(prefix)+"\n"
 
     # Following [Corman et al. 2019] Vioations are targets such that the SHAPE cannot be verified, i.e. NOT EXISTS:
-    query = query + "SELECT * WHERE { \n"+target_pattern + " FILTER NOT EXISTS { " + rewriteShape(current_subject,1,g)+"\n } }"
-    # TODO: As an optimization, can we replace any "FILTER NOT EXISTS {  FILTER NOT EXISTS" with just " { " ... avoiding "double negation"?
+    query = query + "SELECT * WHERE { \n"+target_pattern + " FILTER NOT EXISTS { " + target_pattern + rewriteShape(current_subject,1,g)+"\n } }"
+    # TODO: As an optimization, can we replace any "FILTER NOT EXISTS {  FILTER NOT EXISTS" with 
+    # * just " { " ... avoiding "double negation"
+    # * or do we need to rather copy the target pattern inside? Can we use MINUS?
     # ... FWIW, this does all in one go, i.e. should compute all violated targets.
 
     return(query)
