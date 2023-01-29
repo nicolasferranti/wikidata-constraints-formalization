@@ -73,6 +73,8 @@ def rewritePropertyShape(current_subject,current_target,g):
         #Hint: MaxCount < 0  does't make sense
         assert( maxCount >=0 )
  
+    # For checking minCounts and maxCounts we use a COUNT query with a FILTER... 
+    # TODO: I am not sure this works as intended in connection with the NOT EXISTS, need to test!!! 
     if (minCount>=1 or maxCount>=0):
         cnt_var = "?CNT"+str(current_target)
         query_new = "{ SELECT ( COUNT(*) AS "+cnt_var+") WHERE { "+target+" "+path+" "+val+" } } FILTER ( " 
