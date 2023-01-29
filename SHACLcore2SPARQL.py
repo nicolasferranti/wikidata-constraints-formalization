@@ -206,7 +206,7 @@ def rewriteValueShape(current_subject,current_target,g):
         # filterExpr += " FILTER(  "+val+" = "+ triples[0][2] +")"
     
     #sh:minLength
-    #TODO    
+    #TODO
     #sh:maxLength
     #TODO
     
@@ -220,7 +220,7 @@ def MyShacl2Sparql(url, format="turtle", localfile=False):
     if (localfile == True):
         g.parse(url,format=format)        
     else:
-        requests.get(url)
+        r=requests.get(url)
         g.parse(data=r.text,format=format)
     print ("### original SHACL graph:")
     for l in g.serialize(format="turtle").split("\n"):
@@ -265,9 +265,10 @@ def MyShacl2Sparql(url, format="turtle", localfile=False):
 def main():
     args = sys.argv[1:]
     # for the moment, we assume the first argument to be a URL
-    print (args)
     print(MyShacl2Sparql(args[0]))
     # args is a list of the command line args
+    #File could be called by 
+    # print(MyShacl2Sparql(args[0]), localfile=True)
 
 if __name__ == "__main__":
     main()
