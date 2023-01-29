@@ -54,7 +54,8 @@ def rewritePropertyShape(current_subject,current_target,g):
     
     # 1) sh:minCount : minCount 
     #  .... i.e. there have to be at least minCount occurrences of this path
-    minCount = 0
+    # we initialize to -1 indicating "unset"
+    minCount = -1
     triples = list(g.triples((current_subject,SH.minCount,None)))
     if(len(triples)):
         assert(len(triples)==1) #there should be max 1 sh:minCount per property shape
@@ -64,6 +65,7 @@ def rewritePropertyShape(current_subject,current_target,g):
         
 
     # 2) sh:maxCount : minCount
+    # we initialize to -1 indicating "unset"
     maxCount = -1
     #  .... i.e. there have to be at most maxCount occurrences of this path
     triples = list(g.triples((current_subject,SH.maxCount,None)))
@@ -74,7 +76,7 @@ def rewritePropertyShape(current_subject,current_target,g):
         assert( maxCount >=0 )
  
     # For checking minCounts and maxCounts we use a COUNT query with a FILTER... 
-    # TODO: I am not sure this works as intended in connection with the NOT EXISTS, need to test!!! 
+    # TODO, I am not sure this works as intended in connection with the NOT EXISTS, need to test!!! 
     if (minCount>=1 or maxCount>=0):
         cnt_var = "?CNT"+str(current_target)
         query_new = "{ SELECT ( COUNT(*) AS "+cnt_var+") WHERE { "+target+" "+path+" "+val+" } } FILTER ( " 
@@ -86,17 +88,31 @@ def rewritePropertyShape(current_subject,current_target,g):
             query_new += (cnt_var+" >= "+str(minCount))
         query_new += ") "
 
-    if (minCount>1 or maxCount>0):
-        # we don't nee the complicated FILTER COUNT query for only minCount > 1... in that case it suffices to check for path existence.
-        query = query_new
+    if(maxCount >= 0):
+        # We need to handle maxCount in a special manner: the counting with COUNT only works if the actual count is > 0, i.e. if it exists,
+        # that is, a maxCount is also "fulfilled, in case of NOT EXISTS, which we need to add as a UNION...
+        maxcount0_query = "FILTER NOT EXISTS { "+ query +" }  " 
 
-    # TODO: As per the SHACL spec maxCount = 0 should be treated as negation, i.e. should be replaced by sh:not...
-    # TODO: What happens if minCount > maxCount
+    if (minCount>1 or maxCount>0):
+        query = query_new
+    else:
+        pass
+        # we don't nee the complicated FILTER COUNT query for only minCount = 1... in that case it suffices to check for path existence.
+        # so we can leave the original query unchanged
+
+
+    # Note: As per the SHACL spec maxCount = 0 should be treated as negation, i.e. should be replaced by sh:not...
     if(maxCount == 0):
         print("#### WARNING: TODO: maxCount = 0 is boiling down to a simple NOT EXISTS, However, we need to copy the target pattern for this case, otherwise it does") 
         print("###           not work, i.e.,SPARQL does not do well with directly nested FILTER NOT EXISTS, due to the evaluation mechanics of SPARQL!")
-        query = " FILTER NOT EXISTS { "+ query +" }  " 
-
+        query = maxcount0_query
+    elif(maxCount > 0 and minCount == 0):
+        # TODO: Afraid this does not work! NEEDS TESTING WITH A SMALL DATASET!
+        query = "{{ " + maxcount0_query + " } UNION { "+query+" }}"
+        
+    # minCount > maxCount should not be allowed!
+    assert(minCount <= maxCount)
+    
         #sh:class : rdfs:Resource
         #sh:datatype : rdfs:Resource
         #sh:node : sh:NodeShape
@@ -162,27 +178,50 @@ def serializeRDFTerm(term):
 def rewriteValueShape(current_subject,current_target,g):
     val="?V"+str(current_target)
     filterExpr = ""
+
     #sh:pattern
     triples = list(g.triples((current_subject, SH.pattern, None)))
     if(len(triples)): 
         assert(len(list(triples))==1) #there can only be exactly 1 pattern
         filterExpr += " FILTER( REGEX( "+val+", \""+triples[0][2]+"\" ))"
+
     #sh:in
     triples = list(g.triples((current_subject, (SH["in"]/((RDF.rest*ZeroOrMore/RDF.first))), None)))
     if(len(triples)): 
         l=[serializeRDFTerm(t[2]) for t in triples]
         filterExpr += " FILTER(  "+val+" IN( "+ ",".join(l)+" ))"
+
+    #sh:hasValue
+    triples = list(g.triples((current_subject, SH.hasValue, None)))
+    if(len(triples)): 
+        
+        assert(len(list(triples))==1) #there can only be exactly 1 hasValue
+        # to be sure, we also verify that triples[0][2] is not a BNode (wouldn't make sense):
+        assert(type(triples[0][2]) != rdflib.term.BNode)
+        
+        val = triples[0][2]
+        
+        # TODO: What if hasValue is combined with another constraint, e.g. another shape...?
+        # ... would not make much sense but this following alternative translation wouuld still work then:
+        # filterExpr += " FILTER(  "+val+" = "+ triples[0][2] +")"
+    
     #sh:minLength
+    #TODO    
     #sh:maxLength
+    #TODO
+    
     return val+" . "+filterExpr
 
-def MyShacl2Sparql(url, format="turtle"):
+def MyShacl2Sparql(url, format="turtle", localfile=False):
     g = Graph()
     #FWIW, this should work, but gives me a 404 when run against github, so we go via requests, which works...
     #g.parse(source=url,format=format)
     #.... alternative:
-    r=requests.get(url)
-    g.parse(data=r.text,format=format)
+    if (localfile == True):
+        g.parse(url,format=format)        
+    else:
+        requests.get(url)
+        g.parse(data=r.text,format=format)
     print ("### original SHACL graph:")
     for l in g.serialize(format="turtle").split("\n"):
         print ("# ",l)
