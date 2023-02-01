@@ -1,3 +1,10 @@
+# cf. https://www.wikidata.org/wiki/Q21510852 ... for the description of Commons link constraint.
+# We show here an example for property https://www.wikidata.org/wiki/Property:P14
+# This constraint is again NOT directly expressible in SHACL, as it needs the value of the qualifier https://www.wikidata.org/wiki/Property:P2307
+# (in this case "File") to be appended to the Commons prefix URL for checking the constraint.
+# We deomstrate this here just by an already "instantiated" SHACL constraint: 
+
+
 @prefix :        <http://example.org/> .
 @prefix wdt:     <http://www.wikidata.org/prop/direct/> .
 @prefix wd:      <http://www.wikidata.org/entity/> .
