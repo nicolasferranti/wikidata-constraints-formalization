@@ -1,3 +1,10 @@
+# cf. https://www.wikidata.org/wiki/Q21510852 ... for the description of Commons link constraint.
+# We show here an example for property https://www.wikidata.org/wiki/Property:P14
+# This constraint is again NOT directly expressible in SPARQL, as it needs the value of the qualifier https://www.wikidata.org/wiki/Property:P2307
+# (in this case "File") to be appended to the Commons prefix URL for checking the constraint. However, when we append the respective namespace URL
+# i.e. "https://commons.wikimedia.org/wiki/File:" to check the constraint, we don't get correct results, because it seems that the actual 
+# URLs are internally in WD's RDF dump represented with a different (redirected?) namespace (http://commons.wikimedia.org/wiki/Special:FilePath/)
+# We deomstrate this here just by an already "instantiated" SPARQL query, that uses the actual 'File' prefix: 
 
 
 SELECT DISTINCT 
