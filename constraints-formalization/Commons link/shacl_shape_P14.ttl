@@ -20,15 +20,7 @@
       [
         sh:property [
     		sh:path wdt:P14 ;
-            sh:pattern "^https://commons.wikimedia.org/wiki/File:" ;
-            sh:flags "i" ;
+            sh:pattern "^http://commons.wikimedia.org/wiki/Special:FilePath/" ;
         ]
       ]
-      [
-        sh:property [
-            sh:path wdt:P14 ;
-            sh:pattern "\^http://commons.wikimedia.org/wiki/File:" ;
-            sh:flags "i" ;
-        ]
-      ]
-    ) .
+ .
