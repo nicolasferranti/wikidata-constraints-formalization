@@ -1,3 +1,5 @@
+
+
 SELECT DISTINCT 
 ?subject ?wdt_property ?object
 WHERE
@@ -5,10 +7,16 @@ WHERE
   ?property wikibase:directClaim ?wdt_property.
   ?property p:P2302 ?statement.
   ?statement ps:P2302 wd:Q21510852. ## Commons link constraint
-  #?statement pq:P2307 ?namespace.
+  ?statement pq:P2307 ?namespace_descriptor.
   
   ?subject ?wdt_property ?object.
-  FILTER(!STRSTARTS(STR(?object), 'http://commons.wikimedia.org/'))
+  # THis constraint is not expressible in SPARQL directly, because one CANNOT determine the required namespace prefix by just concatenation:
+  # THe following unfortunately does not work:
+  #    FILTER(!STRSTARTS(STR(?object), CONCAT(CONCAT('https://commons.wikimedia.org/wiki/',?namespace_descriptor),':')))
+  # because the *actual*, i.e. redirected namespace for e.g "https://commons.wikimedia.org/wiki/File:" prefixed images is 
+  # ... 'http://commons.wikimedia.org/wiki/Special:FilePath/' ... so there seems to be an issue in the RDF mapping here?
+
+  FILTER(!STRSTARTS(STR(?object), 'http://commons.wikimedia.org/wiki/Special:FilePath/'))
   
   # EXAMPLE (comment next line to query all violations for all properties of this type...)
   # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
