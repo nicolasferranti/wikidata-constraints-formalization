@@ -140,3 +140,335 @@ class FormatConstraint(ConstraintType):
 
     def getRequiredPrefixes(self):
         return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.sh_prefix]
+
+class SingleValueConstraint(ConstraintType):
+    def __init__(self):
+        self.constraint_shacl = """
+:$WD_PROPERTY$_SingleValueConstraintShape 
+    a sh:NodeShape ;
+    sh:targetSubjectsOf wdt:$WD_PROPERTY$;
+    sh:property [
+		sh:path wdt:$WD_PROPERTY$ ;
+	    sh:maxCount 1 ;
+	    sh:description "Specifies that a property generally only has a single value."; 
+    ] ;
+    $MANDATORY$
+"""
+
+    def toShacl(self, pid, qualifiers):
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", pid
+        )
+        mandatory = False
+        for qualifier in qualifiers:
+            qid = qualifier.get("pq_qualifiers")
+            qid = qid[qid.rfind("/P") + 1:]  # without P
+            match qid:
+                ## P2316 CONSTRAINT STATUS
+                case EnumQualifiersID.constraint_status_qualifier.value:
+                    constraint_status_link = qualifier.get("object_val")[0]  # !!??
+                    if constraint_status_link == "http://www.wikidata.org/entity/Q21502408":
+                        mandatory = True
+
+        if mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Violation ."
+            )
+        else:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Warning ."
+            )
+
+        return self.constraint_shacl
+
+    def getRequiredPrefixes(self):
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.sh_prefix]
+
+class ItemRequiresStatementConstraint(ConstraintType):
+    def __init__(self):
+        self.constraint_shacl = """
+:$WD_PROPERTY$_ItemRequiresStatementShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf wdt:$WD_PROPERTY$ ;
+    sh:property [
+       sh:path wdt:$PROPERTY$ ;
+       sh:minCount 1;
+       sh:in ($item_of$) ;
+       sh:description "items using this property should have a certain other statement"; 
+    ] ;
+    $MANDATORY$
+"""
+
+    def toShacl(self, pid, qualifiers):
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", pid
+        )
+
+        prop = ""
+        item_of = ""
+        mandatory = False
+        for qualifier in qualifiers:
+            qid = qualifier.get("pq_qualifiers")
+            qid = qid[qid.rfind("/P") + 1:]
+            constraint_status_link = ""
+            match qid:
+                ## P2306 property
+                case EnumQualifiersID.property_qualifier.value:  # !!
+                    prop = qualifier.get("object_val")[0]
+                    prop = prop[prop.rfind("/P") + 1:]
+                ## P2305 item of property constraint
+                case EnumQualifiersID.item_of_property_constraint_qualifier.value:  # !!
+                    for new_expression in qualifier.get("object_val"):
+                        new_expression = new_expression[new_expression.rfind("/Q") + 1:]
+                        new_expression = "wd:" + new_expression + " "
+                        item_of += new_expression
+                ## P2316 constraint status
+                case EnumQualifiersID.constraint_status_qualifier.value:
+                    constraint_status_link = qualifier.get("object_val")[0]  # !!??
+                    if constraint_status_link == "http://www.wikidata.org/entity/Q21502408":
+                        mandatory = True
+
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$PROPERTY$", prop
+        )
+        if item_of:
+            item_of = item_of[:-1]
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$item_of$", item_of
+            )
+        else:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "       sh:in ($item_of$) ;\n", ""
+            )
+
+        if mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Violation ."
+            )
+        elif not mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Warning ."
+            )
+
+        return self.constraint_shacl
+
+    def getRequiredPrefixes(self):
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.wd_prefix, EnumPrefixes.sh_prefix]
+
+
+class OneOfConstraint(ConstraintType): # why P279??
+    def __init__(self):
+        self.constraint_shacl = """
+:$WD_PROPERTY$_OneOfShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf wdt:$WD_PROPERTY$;
+    sh:property[
+        sh:path ( wdt:$WD_PROPERTY$ [ sh:zeroOrMorePath wdt:P279 ] ) ;
+        sh:in ($item_of$) ;
+        sh:description "specifies that only certain values are allowed for a property."; 
+    ] ;
+    $MANDATORY$
+"""
+
+    def toShacl(self, pid, qualifiers):
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", pid
+        )
+
+        item_of = ""
+        mandatory = False
+        for qualifier in qualifiers:
+            qid = qualifier.get("pq_qualifiers")
+            qid = qid[qid.rfind("/P") + 1:]
+            constraint_status_link = ""
+            match qid:
+                ## P2305 item of property constraint
+                case EnumQualifiersID.item_of_property_constraint_qualifier.value:  # !!
+                    for new_expression in qualifier.get("object_val"):
+                        position = new_expression.rfind("/Q")
+                        if position > -1:
+                            new_expression = new_expression[position + 1:]
+                            new_expression = "wd:" + new_expression + " "
+                            item_of += new_expression
+                ## P2316 constraint status
+                case EnumQualifiersID.constraint_status_qualifier.value:
+                    constraint_status_link = qualifier.get("object_val")[0]  # !!??
+                    if constraint_status_link == "http://www.wikidata.org/entity/Q21502408":
+                        mandatory = True
+
+        if item_of:
+            item_of = item_of[:-1]
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$item_of$", item_of
+            )
+        else:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "       sh:in ($item_of$) ;\n", ""
+            )
+
+        if mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Violation ."
+            )
+        elif not mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Warning ."
+            )
+
+        return self.constraint_shacl
+
+    def getRequiredPrefixes(self):
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.wd_prefix, EnumPrefixes.sh_prefix,
+                EnumPrefixes.p_prefix, EnumPrefixes.pq_prefix, EnumPrefixes.sh_prefix]
+
+class RequiredQualifiersConstraint(ConstraintType):
+    def __init__(self):
+        self.constraint_shacl = """
+:$WD_PROPERTY$_RequiredQualifiersShape 
+    a sh:NodeShape ;
+    sh:targetObjectsOf p:$WD_PROPERTY$ ;
+    sh:property[
+        sh:path pq:$PROPERTY$ ;
+        sh:minCount 1 ;
+        sh:description "Specifies that some qualifier is required for this property."; 
+    ] ;
+    $MANDATORY$
+"""
+
+    def toShacl(self, pid, qualifiers):
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", pid
+        )
+
+        prop = ""
+        mandatory = False
+        for qualifier in qualifiers:
+            qid = qualifier.get("pq_qualifiers")
+            qid = qid[qid.rfind("/P") + 1:]
+            constraint_status_link = ""
+            match qid:
+                ## P2306 property_qualifier
+                case EnumQualifiersID.property_qualifier.value:
+                    prop = qualifier.get("object_val")[0]
+                    prop = prop[prop.rfind("/P") + 1:]
+                ## P2316 constraint status
+                case EnumQualifiersID.constraint_status_qualifier.value:
+                    constraint_status_link = qualifier.get("object_val")[0]
+                    if constraint_status_link == "http://www.wikidata.org/entity/Q21502408":
+                        mandatory = True
+
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$PROPERTY$", prop
+        )
+
+        if mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Violation ."
+            )
+        elif not mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Warning ."
+            )
+
+        return self.constraint_shacl
+
+    def getRequiredPrefixes(self):
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.wd_prefix, EnumPrefixes.sh_prefix,
+                EnumPrefixes.p_prefix, EnumPrefixes.pq_prefix, EnumPrefixes.sh_prefix]
+
+class ValueRequiresStatementConstraint(ConstraintType):
+    def __init__(self):
+        self.constraint_shacl = """
+:$WD_PROPERTY$_ValueRequiresStatementShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf wdt:$WD_PROPERTY$ ;
+    sh:description "Specifies that values for this property (enitity of the property) should have a certain other statement."; 
+    sh:or (
+        [ sh:in ($EXCEPTIONS$) ]
+        [
+            sh:property [
+                sh:path (wdt:$WD_PROPERTY$ wdt:$PROPERTY$) ;
+                sh:minCount 1 ;
+                sh:in ($item_of$) ;
+            ]
+        ]
+    ) ;
+    $MANDATORY$
+"""
+    def toShacl(self, pid, qualifiers):
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$WD_PROPERTY$", pid
+        )
+
+        exceptions = ""
+        prop = ""
+        item_of = ""
+        mandatory = False
+        for qualifier in qualifiers:
+            qid = qualifier.get("pq_qualifiers")
+            qid = qid[qid.rfind("/P") + 1:]
+            constraint_status_link = ""
+            match qid:
+                ## P2306 property
+                case EnumQualifiersID.property_qualifier.value:  # !!
+                    prop = qualifier.get("object_val")[0]
+                    prop = prop[prop.rfind("/P") + 1:]
+                ## P2305 item of property constraint
+                case EnumQualifiersID.item_of_property_constraint_qualifier.value:  # !!
+                    for new_expression in qualifier.get("object_val"):
+                        new_expression = new_expression[new_expression.rfind("/Q") + 1:]
+                        new_expression = "wd:" + new_expression + " "
+                        item_of += new_expression
+                ## P2303 exception to constraint
+                case EnumQualifiersID.exception_to_constraint_qualifier.value:
+                    for exception in qualifier.get("object_val"):
+                        exception = exception[exception.rfind("/Q") + 1:]
+                        exception = "wd:" + exception + " "
+                        exceptions += exception
+                ## P2316 constraint status
+                case EnumQualifiersID.constraint_status_qualifier.value:
+                    constraint_status_link = qualifier.get("object_val")[0]  # !!??
+                    if constraint_status_link == "http://www.wikidata.org/entity/Q21502408":
+                        mandatory = True
+
+        # property
+        self.constraint_shacl = self.constraint_shacl.replace(
+            "$PROPERTY$", prop
+        )
+        # item of property
+        if item_of:
+            item_of = item_of[:-1]
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$item_of$", item_of
+            )
+        else:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "                sh:in ($item_of$) ;\n", ""
+            )
+
+        # Exceptions
+        if exceptions:
+            exceptions = exceptions[:-1]
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$EXCEPTIONS$", exceptions
+            )
+        else:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "        [ sh:in ($EXCEPTIONS$) ]\n", ""
+            )
+
+        # Mandatory
+        if mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Violation ."
+            )
+        elif not mandatory:
+            self.constraint_shacl = self.constraint_shacl.replace(
+                "$MANDATORY$", "sh:severity sh:Warning ."
+            )
+
+        return self.constraint_shacl
+
+    def getRequiredPrefixes(self):
+        return [EnumPrefixes.example_prefix, EnumPrefixes.wdt_prefix, EnumPrefixes.wd_prefix, EnumPrefixes.p_prefix,
+                EnumPrefixes.pq_prefix, EnumPrefixes.sh_prefix]

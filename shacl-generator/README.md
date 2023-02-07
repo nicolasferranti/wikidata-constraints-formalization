@@ -25,7 +25,7 @@ This tool is meant to generate SHACL property shapes for WD properties, using Ni
 - [ ] distinct-values constraint
 - [x] format constraint
 - [ ] integer constraint
-- [ ] item-requires-statement constraint
+- [x] item-requires-statement constraint
 - [ ] label in language constraint
 - [ ] lexeme requires language constraint
 - [ ] lexeme requires lexical category constraint
@@ -33,14 +33,14 @@ This tool is meant to generate SHACL property shapes for WD properties, using Ni
 - [ ] multi-value constraint
 - [ ] no-bounds constraint
 - [ ] none-of constraint
-- [ ] one-of constraint
+- [x] one-of constraint
 - [ ] one-of qualifier value property constraint
 - [ ] property scope constraint
 - [ ] range constraint
-- [ ] required qualifier constraint
+- [x] required qualifiers constraint
 - [ ] single-best-value constraint
-- [ ] single-value constraint
+- [x] single-value constraint
 - [ ] symmetric constraint
 - [x] type constraint
-- [ ] value-requires-statement constraint
+- [x] value-requires-statement constraint
 - [ ] value-type constraint
