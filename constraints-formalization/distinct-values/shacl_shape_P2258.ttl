@@ -1,6 +1,6 @@
-@prefix :        <http://example.org/>
-@prefix wdt:     <http://www.wikidata.org/prop/direct/>
-@prefix sh:      <http://www.w3.org/ns/shacl#>
+@prefix :        <http://example.org/> .
+@prefix wdt:     <http://www.wikidata.org/prop/direct/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
 
 # MobileCountryCode
 # Note: Partially represented, only when there are no separators

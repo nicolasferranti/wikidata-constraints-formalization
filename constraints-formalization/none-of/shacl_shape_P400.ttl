@@ -1,11 +1,11 @@
-@prefix :        <http://example.org/>
-@prefix wdt:     <http://www.wikidata.org/prop/direct/>
-@prefix wd:      <http://www.wikidata.org/entity/>
-@prefix p:       <http://www.wikidata.org/prop/>
-@prefix pq:      <http://www.wikidata.org/prop/qualifier/>
-@prefix wikibase:<http://wikiba.se/ontology#>
-@prefix psv:     <http://www.wikidata.org/prop/statement/value/>
-@prefix sh:      <http://www.w3.org/ns/shacl#>
+@prefix :        <http://example.org/> .
+@prefix wdt:     <http://www.wikidata.org/prop/direct/> .
+@prefix wd:      <http://www.wikidata.org/entity/> .
+@prefix p:       <http://www.wikidata.org/prop/> .
+@prefix pq:      <http://www.wikidata.org/prop/qualifier/> .
+@prefix wikibase:<http://wikiba.se/ontology#> .
+@prefix psv:     <http://www.wikidata.org/prop/statement/value/> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
 
 # Platform
 :P400_NoneOfConstraintShape
