@@ -1,6 +1,5 @@
 SELECT DISTINCT 
-?subject ?wdt_property
-(lang(?object) as ?language)
+?subject ?wdt_property ?language
 WHERE
 {
   ?property wikibase:directClaim ?wdt_property.
