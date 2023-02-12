@@ -1,3 +1,15 @@
+# https://www.wikidata.org/wiki/Property:P3831  object has role (P3831) 
+# Example of an  allowed-entity-types constraint (Q52004125) https://www.wikidata.org/wiki/Q52004125 
+# type of constraint for Wikidata properties: used to specify that a property may only be used on a certain 
+# listed entity type: Wikibase item, Wikibase property, lexeme, form, sense, Wikibase MediaInfo
+# For P3831 the allowed entity types are:
+#  Wikibase item     
+#  Wikibase MediaInfo
+#  Wikibase lexeme
+#  Wikibase form
+#  Wikibase sense
+#  Wikibase property
+
 @prefix :        <http://example.org/> .
 @prefix wdt:     <http://www.wikidata.org/prop/direct/> .
 @prefix wd:      <http://www.wikidata.org/entity/> .
