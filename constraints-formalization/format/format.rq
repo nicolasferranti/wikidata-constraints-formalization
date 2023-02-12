@@ -1,3 +1,6 @@
+# type of constraint for Wikidata properties: used to specify that the value for this property has to correspond to a given pattern
+# if ?s ?p ?o exists and ?P has format constraint, then the value of ?o must comply with the pattern expected.
+# These patterns are expressed with regular expressions, therefore we test ?o agains the regular expression
 SELECT
 ?subject
 ?wdt_prop

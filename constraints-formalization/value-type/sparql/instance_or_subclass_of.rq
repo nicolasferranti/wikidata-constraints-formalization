@@ -1,3 +1,8 @@
+# type of constraint for Wikidata properties: used to specify that the referenced item should be a subclass or instance of a given type
+# The objects of a statement ?s ?p ?o must be an instance or subclass of one of the listed classes
+# e.g. if ?p = transport network (P16), then ?o must be an instance or subclass of road, transport network,
+# road number, or other listed entities.
+# SPARQL representation:
 SELECT DISTINCT 
     ?subject
     ?wdt_property 

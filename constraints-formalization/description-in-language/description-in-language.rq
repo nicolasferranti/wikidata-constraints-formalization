@@ -1,3 +1,6 @@
+# https://www.wikidata.org/wiki/Q111204896
+# constraint to ensure items using a property have description in the language. Use qualifier "WMF language code" (P424) to define language.
+# is ?s ?p ?o exists and ?p has description in language constraint, then the subject ?s must have a label (property schema:description) in a specific language
 SELECT DISTINCT 
 ?subject ?wdt_property ?language
 WHERE

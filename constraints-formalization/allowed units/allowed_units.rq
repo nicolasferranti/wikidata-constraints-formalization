@@ -1,3 +1,7 @@
+# http://www.wikidata.org/entity/Q21514353
+# type of constraint for Wikidata properties: used to specify that only listed units may be used
+# if ?s ?p ?o exists and ?p has allowed units constraint, then the units used in the value must match the ones allowed by the constraint
+# e.g. for ?p = wind speed (P5065), all values must be in metre per second (Q182429)
 SELECT DISTINCT 
   ?subject
   ?p_property

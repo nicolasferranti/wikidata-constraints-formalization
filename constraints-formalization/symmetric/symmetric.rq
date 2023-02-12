@@ -1,3 +1,8 @@
+# type of constraint for Wikidata properties: used to specify that the referenced entity should also link back to this entity
+# if ?s ?p ?o exists, then ?o ?p ?s should also exists
+# e.g. if ?p = diplomatic relation (P530), then there should exist an edge from ?s to ?o and from ?o to ?s
+# Japan (Q17) diplomatic relation (P530) Canada (Q16) and vice versa
+# SPARQL representation:
 SELECT DISTINCT
 ?subject
 ?wdt_property

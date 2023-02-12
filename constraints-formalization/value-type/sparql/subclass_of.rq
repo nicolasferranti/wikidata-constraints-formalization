@@ -1,4 +1,7 @@
-## type of constraint for Wikidata properties: used to specify that the referenced item should be a subclass or instance of a given type
+# type of constraint for Wikidata properties: used to specify that the referenced item should be a subclass or instance of a given type
+# The objects of a statement ?s ?p ?o must be a subclass of one of the listed classes
+# e.g. if ?p = type of variable star (P881), then ?o must be a subclass of variable star
+# SPARQL representation:
 SELECT DISTINCT 
 ?subject
 ?wd_property 

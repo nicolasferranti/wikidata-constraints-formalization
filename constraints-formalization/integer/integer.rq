@@ -1,3 +1,5 @@
+# constraint type used when values have to be integer only
+# if ?s ?p ?o exists and ?p has inter constraint, then ?o must be an integer value. We use regular expression to identify integer literals
 SELECT
   ?subject ?wdt_property ?object
   ?deprecated_reason

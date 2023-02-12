@@ -1,3 +1,6 @@
+# type of constraint for Wikidata properties: used to specify that the referenced lexeme should have a given lexical category
+# is ?s ?p ?o exists and ?p has lexeme value requires lexical category constraint, then the object ?o must have a lexical category
+# if ?p = personal pronoun (P6553), lexemes such as she (https://www.wikidata.org/wiki/Lexeme:L484) must have a lexical category
 SELECT DISTINCT
 ?subject ?wdt_property ?object
 {

@@ -1,3 +1,6 @@
+# constraint to ensure items using a property have labels in the language. Use qualifier "WMF language code" (P424) to define language.
+# if ?s ?p ?o exists and ?p has a label in language constraint, then the subject ?s must have a label in a predefined language.
+#if ?p = Lost Art ID (P1428), an identifier on the German Lost Art Foundation website, then ?s should have a label in German
 SELECT
 ?subject ?property ?language_code
 ?constraint_status ?deprecated_reason

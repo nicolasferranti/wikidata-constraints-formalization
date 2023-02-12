@@ -1,3 +1,6 @@
+# type of constraint for Wikidata properties: used to specify that the referenced item has to refer back to this item with the given inverse property
+# if ?s ?p ?o exists and ?p has the inverse constraint, then ?p2 (the inverse property) exists and ?o ?p2 ?s must also exist
+# e.g. if ?p = mother (P25), then ?p2 = child (P40)
 SELECT
 ?subject
 ?property

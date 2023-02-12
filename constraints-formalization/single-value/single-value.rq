@@ -1,4 +1,9 @@
-## QUERY SUBJECTS THAT HAVE MORE THAN 1 VALUE VIOLATING THE SINGLE-VALUE CONSTRAINT
+# type of constraint for Wikidata properties: used to specify that this property generally contains a single value per item
+# if ?s ?p ?o exists, then the graph can not have ?s ?p ?o2 and ?o2 != ?o
+# The only exception is when a separator property is defined and both ?o and ?o2 have different values for the separator
+# e.g. if ?p = DOAB publisher ID (P5062), as an ID, each ?s should have only one ?o
+# e.g. if ?p = capital (P36), ?o != ?o2 is allowed as long as they have a different point in time (P585)
+# SPARQL representation:
 select DISTINCT 
   ?subject ?property
   ?wds1 ?wds2

@@ -1,3 +1,6 @@
+# type of constraint for Wikidata properties: used to specify that the value for this property is likely to be different from all other items
+# if ?s ?p ?o exists and ?p has distinct-values constraint, then for ?s ?p ?o2 is mandatory that ?o != ?o2. In another words, no repetead values are allowed
+# e.g. ?p = signature (P109)
 SELECT
 (GROUP_CONCAT(DISTINCT ?subject1; SEPARATOR="; ") AS ?subject)
 ?wdt_prop 

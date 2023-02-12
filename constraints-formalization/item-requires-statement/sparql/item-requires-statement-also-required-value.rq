@@ -1,3 +1,5 @@
+# type of constraint for Wikidata properties: used to specify that an item with this property should also have another given property
+# if ?s ?p ?o exists and ?p has item-requires-statement constraint WITH a required value then ?s ?required_property ?required_value should exist
 SELECT DISTINCT
 ?s ?wdt_property  ?o
 ?wdt_required_property

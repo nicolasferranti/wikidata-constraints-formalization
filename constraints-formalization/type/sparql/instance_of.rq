@@ -1,4 +1,7 @@
-## type of constraint for Wikidata properties: used to specify that the item described by such properties should be a subclass or instance of a given type
+# type of constraint for Wikidata properties: used to specify that the item described by such properties should be a subclass or instance of a given type
+# The subjects of a statement ?s ?p ?o must be an instance of one of the listed classes
+# e.g. if ?p = element symbol (P246), then ?s must be an instance of chemical element
+# SPARQL representation:
 SELECT DISTINCT
   ?subject
   ?property

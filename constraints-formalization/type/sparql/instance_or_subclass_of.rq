@@ -1,3 +1,8 @@
+# type of constraint for Wikidata properties: used to specify that the item described by such properties should be a subclass or instance of a given type
+# The subjects of a statement ?s ?p ?o must be an instance or subclass of one of the listed classes
+# e.g. if ?p = OpenStreetMap element (P10689), then ?s must be an instance or subclass of geographical feature,
+# geographic entity, hotel, work of art, or educational institution
+# SPARQL representation:
 SELECT DISTINCT 
     ?subject
     ?wdt_property 

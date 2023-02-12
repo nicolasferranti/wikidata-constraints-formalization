@@ -1,3 +1,7 @@
+# type of constraint for Wikidata properties: used to specify that the referenced item should have a statement with a given property
+# The objects (?o) of a statement ?s ?p ?o must have a specific statement ?o ?wdt_required_property []
+# e.g. if ?p = interchange station (P833), then ?wdt_required_property = connecting line
+# SPARQL representation:
 SELECT 
   ?s ?o
   ?wdt_property 

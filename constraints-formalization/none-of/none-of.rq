@@ -1,4 +1,6 @@
 ## constraint specifying values that should not be used for the given property
+# if ?s ?p ?o exists and ?p has none-of constraint, then ?o CAN NOT be one of the listed values
+# if ?p = position held (P39), ?o CAN NOT be equal to minister, a more specific item should be used (country or actual position)
 SELECT DISTINCT 
 ?subject  ?property ?disallowed # violations of none-of constraints
 ?replacement_property ?replacement_value

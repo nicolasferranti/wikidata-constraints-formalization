@@ -1,3 +1,6 @@
+# type of constraint for Wikidata properties: used to specify that a property generally contains more than one value per item
+# if ?s ?p ?o exists and ?p has multi-value constraint, then ?s ?p ?o2 with ?o2 != ?o should also exist
+# if ?p = primary destinations (P1302), multiple values are expected
 SELECT DISTINCT 
 ?subject
 ?wdt_property

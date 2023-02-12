@@ -1,3 +1,8 @@
+# http://www.wikidata.org/entity/Q21510851
+# type of constraint for Wikidata properties: used to specify that only the listed qualifiers should be used. Novalue disallows any qualifier
+# if ?s ?p ?o exists and ?p has allowed qualifiers constraint, then for ?p = p:PID, all qualifiers used in ?o ?qual ?val (where ?qual = pq:QUALIFIER_ID) should match the ones allowed
+# by the constraint
+# e.g. for ?p = party chief representative (P210), the allowed qualifiers are start time (P580) and end time (P582)
 SELECT DISTINCT
   ?subject
   ?wd_property

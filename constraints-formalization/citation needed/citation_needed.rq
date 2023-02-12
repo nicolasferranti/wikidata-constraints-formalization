@@ -1,4 +1,7 @@
-# type of constraint for Wikidata properties: specifies that a property must have at least one reference
+# http://www.wikidata.org/entity/Q54554025
+# citation needed constraint (Q54554025) specifies that statements for a certain property should have at least one reference.
+# if ?s ?p ?o exists, where ?p = p:PID, then the statement node ?o must have at least one reference (checked with prov:wasDerivedFrom).
+# e.g. ?p = academic degree (P512)
 SELECT
 ?subject
 ?wdt_prop

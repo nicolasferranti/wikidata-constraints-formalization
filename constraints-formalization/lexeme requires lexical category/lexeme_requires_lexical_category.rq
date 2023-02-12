@@ -1,3 +1,6 @@
+# type of constraint for Wikidata properties: used to specify that the referenced lexeme should have a given lexical category
+# is ?s ?p ?o exists and ?p has lexeme requires lexical category constraint, then the subject ?s must have a lexical category
+# if ?p = word stem (P5187), lexemes such as する (https://www.wikidata.org/wiki/Lexeme:L830), a Japanese verb, must have a lexical category
 SELECT DISTINCT
 ?subject ?wdt_property ?object
 {

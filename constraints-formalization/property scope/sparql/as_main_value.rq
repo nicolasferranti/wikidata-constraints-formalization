@@ -1,3 +1,4 @@
+# constraint to define the scope of the property (as main property, as qualifier, as reference, or combination). Qualify with "property scope" (P5314)
 SELECT DISTINCT 
 ?subject ?wdt_property ?object
 ?constraint_status ?deprecated_reason

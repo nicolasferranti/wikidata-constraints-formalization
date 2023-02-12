@@ -1,3 +1,8 @@
+# type of constraint for Wikidata properties: used to specify that the value must be between two given values
+# if ?s ?p ?o exists, then the literal value ?o must be in range [?minimum,?maximum]
+# e.g. if ?p = density (P2054), ?o must be higher than minimum value (P2313)
+# and less than maximum value (P2312)
+# SPARQL representation:
 SELECT
 ?subject ?wdt_property ?object
 ?minimum ?maximum

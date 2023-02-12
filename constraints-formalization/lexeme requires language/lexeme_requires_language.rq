@@ -1,3 +1,6 @@
+# property constraint for restricting the use of a property to lexemes in a particular language
+# is ?s ?p ?o exists and ?p has lexeme requires LANGUAGE constraint, then the subject ?s should have a particular language
+# if ?p = Elhuyar Dictionary ID (P6838), lexemes such as urtarril (https://www.wikidata.org/wiki/Lexeme:L8720) must have a specific language
 SELECT
 ?subject ?wdt_property ?object ?lang
 {

@@ -1,3 +1,8 @@
+# https://www.wikidata.org/wiki/Q25796498
+# type of constraint for Wikidata properties: used to specify that the subject and the object have to coincide or coexist at some point of history
+# if ?s ?p ?o exists and ?p has contemporary constraint, then ?s and ?o must coincide or coexist at some point of history.
+# e.g. if ?p = discoverer or inventor (P61)
+# To test the constraint, we compare start time (P580) properties with end time (P582) properties, selecting the end property and its complementary property (P8882)
 SELECT DISTINCT
 ?subject 
 ?wdt_property

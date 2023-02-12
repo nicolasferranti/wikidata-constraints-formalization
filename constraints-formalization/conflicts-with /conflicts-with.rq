@@ -1,3 +1,8 @@
+# https://www.wikidata.org/wiki/Q21502838
+# type of constraint for Wikidata properties: used to specify that an item must not have a given statement
+# if ?s ?p ?o exists and ?p has conflicts-with constraint, then the subject ?s must note have a given statement, in another words, ?s ?target_property ?entity should not exist
+# e.g. ?p = Apple Podcasts podcast ID (P5842), subjects ?s must not be an istance of (P31) radio program (https://www.wikidata.org/wiki/Q1555508) or radio series (https://www.wikidata.org/wiki/Q14623351).
+# Radio programs / show and podcasts based on said programs should be seperate items
 SELECT
 ?subject
 ?property # main property

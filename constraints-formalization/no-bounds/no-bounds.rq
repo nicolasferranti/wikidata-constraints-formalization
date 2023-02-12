@@ -1,3 +1,5 @@
+# type of constraint for Wikidata properties: specifies that a property must only have values that do not have bounds
+# violations are counted if the statement has a wikibase:quantityLowerBound or a wikibase:quantityUpperBound
 SELECT DISTINCT
 ?subject ?wd_property ?wdv
 {

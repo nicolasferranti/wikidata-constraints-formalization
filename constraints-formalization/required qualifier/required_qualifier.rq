@@ -1,3 +1,9 @@
+# type of constraint for Wikidata properties: used to specify that the listed qualifier has to be used
+# if ?s ?p ?o exists, then a set of specific qualifier propertie should also exist
+# e.g. if ?p = p:P1128 (employees), then the qualifier pq:P585 (point in time) should be used to describe when
+# this number of empoloyess was collected
+# the WD triple patterns are: ?s p:P1128 ?o, ?o pq:P585 ?point_in_time_value
+# SPARQL representation:
 SELECT DISTINCT
 ?subject
 ?wdt_property

@@ -1,4 +1,6 @@
-## constraint specifying values that should not be used for the given property
+## type of constraint for Wikidata properties: used to specify that the value for this property has to be one of a given set of items
+# if ?s ?p ?o exists and ?p has one-of constraint, then ?o must be one of the listed values
+# if ?p = canonization status (P411), ?o must be saint, blessed, roman catholic saint, or  venerable
 SELECT DISTINCT 
 ?subject ?property ?object #oneof-constraint violation
 ?constraint_status ?deprecated_reason

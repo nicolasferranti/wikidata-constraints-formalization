@@ -1,3 +1,6 @@
+# constraint that specifies which values can be used for a given qualifier when used on a specific property of an Item Declaration
+# if ?s ?p ?o exists, where ?p = p:PID and ?o = wds:STATEMENT_ID, then a specific qualifier ?pq = pq:QUALIFIER_ID must have a specific value ?item_qualifier.
+# In another words, the pattern ?o ?pq ?item_qualifier must exist.
 SELECT DISTINCT 
 ?subject ?wd_property ?pq_qualifier_property ?item_qualifier
 ?constraint_status ?deprecated_reason

@@ -1,3 +1,9 @@
+# type of constraint for Wikidata properties: used to specify that this property generally contains a single “best” value per item,
+# though other values may be included as long as the “best” value is marked with preferred rank
+# if ?s ?p ?o exists, then the graph can have ?s ?p ?o2 and ?o2 != ?o as long as ?o xor ?o2 has the preferred Rank
+# e.g. if ?p = date of death (P570), multiple estimated values can be added as long as only one of them 
+# is marked as preferred rank
+# SPARQL representation:
 SELECT DISTINCT
   ?subject ?wd_property
 {

@@ -1,3 +1,9 @@
+# type of constraint for Wikidata properties: used to specify that the referenced item should have a statement with a given property
+# The objects (?o) of a statement ?s ?p ?o must have a specific statement ?o ?wdt_required_property ?any_required_value
+# e.g. if ?p = storyboard artist (P3275), then ?wdt_required_property = occupation and
+# ?any_required_value = storyboard artist, artist, story artist, illustrator, character designer, concept artist,
+# animator, or character animator
+# SPARQL representation:
 SELECT DISTINCT
   ?o
   ?wdt_property 
