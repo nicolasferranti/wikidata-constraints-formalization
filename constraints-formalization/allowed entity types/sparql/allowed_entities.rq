@@ -24,30 +24,31 @@ WHERE
   ?wd_property wikibase:directClaim ?wdt_property.
   ?wd_property p:P2302 ?statement.
   ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
- 
-  FILTER NOT EXISTS { {
-                        ?statement pq:P2305 wd:Q29934200 .
-                        FILTER( STRSTARTS(STR(?subject), "http://www.wikidata.org/entity/Q" ) ) 
-                      } UNION
-                      {
-                        ?statement pq:P2305 wd:Q29934218 .
-                        ?subject a wikibase:Property 
-                      } UNION
-                      {
-                        ?statement pq:P2305 wd:Q51885771 .
-                        ?subject a a ontolex:LexicalEntry 
-                      } UNION
-                      {
-                        ?statement pq:P2305 wd:Q54285715 .
-                        ?subject  a ontolex:LexicalSense 
-                      }  UNION
-                      {
-                        ?statement pq:P2305 wd:Q54285143 .
-                        ?subject a  ontolex:Form 
-                      } UNION 
-                      {
-                        ?statement pq:P2305 wd:Q16222597 .
-                        FILTER( STRSTARTS(STR(?subject), "http://www.wikidata.org/entity/Q" ) ) 
-                      }
   
+  FILTER NOT EXISTS { 
+    {
+      ?statement pq:P2305 wd:Q29934200 .
+      FILTER( STRSTARTS(STR(?subject), "http://www.wikidata.org/entity/Q" ) ) 
+    } UNION
+    {
+      ?statement pq:P2305 wd:Q29934218 .
+      ?subject a wikibase:Property 
+    } UNION
+    {
+      ?statement pq:P2305 wd:Q51885771 .
+      ?subject a ontolex:LexicalEntry 
+    } UNION
+    {
+      ?statement pq:P2305 wd:Q54285715 .
+      ?subject a ontolex:LexicalSense 
+    }  UNION
+    {
+      ?statement pq:P2305 wd:Q54285143 .
+      ?subject a ontolex:Form 
+    } UNION 
+    {
+      ?statement pq:P2305 wd:Q16222597 .
+      FILTER( STRSTARTS(STR(?subject), "http://www.wikidata.org/entity/Q" ) ) 
+    }
+  }
 }
