@@ -2,8 +2,7 @@
 # type of constraint for Wikidata properties: used to specify that the value of a given 
 # statement should only differ in the given way. 
 # Use with qualifiers minimum quantity/maximum quantity, 
-# i.e., either  maximumValue/minimumValue pq:P2312/pq:P2313
-#          or maximumDate/minimumDate  pq:P2310/pq:P2311
+# i.e., maximumValue/minimumValue pq:P2312/pq:P2313
 
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
