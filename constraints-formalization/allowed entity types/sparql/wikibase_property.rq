@@ -1,3 +1,20 @@
+# Possible Entity Types:
+#  wd:Q29934200	Wikibase item     ...  Note: {?I  a wikibase:Item } does not work, 
+#                                      because wikibase:Items aren't explicitly typed in the RDF export/query endpoint,  we 
+#                                      approximate them by 
+#                                      { ?S  ?P ?O . FILTER( STRSTARTS(STR(?S), "http://www.wikidata.org/entity/Q" ) ) }
+#                                      which is likely very inefficient.
+#  wd:Q29934218	Wikibase property ...  {?P  a wikibase:Property }
+#  wd:Q51885771	Wikibase lexeme   ...  {?L  a ontolex:LexicalEntry }
+#  wd:Q54285715	Wikibase sense    ...  {?S a ontolex:LexicalSense }
+#  wd:Q54285143	Wikibase form     ...  {?F ontolex:Form }
+#  wd:Q59712033	Wikibase MediaInfo ... Note: {?M a wikibase:MediaInfo } does not work, 
+#                                      because wikibase:MediaInfo aren't explicitly typed in the RDF export/query endpoint.
+#  wd:Q16222597	Wikidata item      ... While these are also not explicity typed, we also approximate them by 
+#                                      { ?S  ?P ?O . FILTER( STRSTARTS(STR(?S), "http://www.wikidata.org/entity/Q" ) ) }
+#                                      which is likely very inefficient.
+
+
 SELECT DISTINCT 
 ?subject ?wdt_property
 WHERE
@@ -7,7 +24,30 @@ WHERE
   ?wd_property wikibase:directClaim ?wdt_property.
   ?wd_property p:P2302 ?statement.
   ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
-  FILTER NOT EXISTS {?statement pq:P2305 wd:Q29934218.} # wikibase property
-
-  ?subject wikibase:propertyType wikibase:WikibaseProperty.
+ 
+  FILTER NOT EXISTS { {
+                        ?statement pq:P2305 wd:Q29934200 .
+                        FILTER( STRSTARTS(STR(?subject), "http://www.wikidata.org/entity/Q" ) ) 
+                      } UNION
+                      {
+                        ?statement pq:P2305 wd:Q29934218 .
+                        ?subject a wikibase:Property 
+                      } UNION
+                      {
+                        ?statement pq:P2305 wd:Q51885771 .
+                        ?subject a a ontolex:LexicalEntry 
+                      } UNION
+                      {
+                        ?statement pq:P2305 wd:Q54285715 .
+                        ?subject  a ontolex:LexicalSense 
+                      }  UNION
+                      {
+                        ?statement pq:P2305 wd:Q54285143 .
+                        ?subject a  ontolex:Form 
+                      } UNION 
+                      {
+                        ?statement pq:P2305 wd:Q16222597 .
+                        FILTER( STRSTARTS(STR(?subject), "http://www.wikidata.org/entity/Q" ) ) 
+                      }
+  
 }
