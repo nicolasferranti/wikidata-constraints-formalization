@@ -6,8 +6,8 @@
 SELECT
 ?subject
 ?property # main property
-?target_property # conflitant property
-?entity # optional conflitant object 
+?target_property # conflicting property
+?entity # optional conflicting object 
 ?replacement_property
 ?replacement_value
 ?deprecated_reason
