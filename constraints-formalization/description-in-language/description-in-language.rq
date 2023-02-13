@@ -2,19 +2,19 @@
 # constraint to ensure items using a property have description in the language. Use qualifier "WMF language code" (P424) to define language.
 # is ?s ?p ?o exists and ?p has description in language constraint, then the subject ?s must have a label (property schema:description) in a specific language
 SELECT DISTINCT 
-?subject ?wdt_property ?language
+?subject ?wdt_property ?language_code
 WHERE
 {
   ?property wikibase:directClaim ?wdt_property.
   ?property p:P2302 ?statement.
   ?statement ps:P2302 wd:Q111204896. ## description in language constraint
-  ?statement pq:P424 ?language.
+  ?statement pq:P424 ?language_code.
   
   ?subject ?wdt_property [].
   
   FILTER NOT EXISTS {
     ?subject schema:description ?object.
-    FILTER( langMatches(lang(?object), str(?language)) )
+    FILTER( langMatches(lang(?object), str(?language_code)) )
   }
   
   # EXAMPLE (comment next line to query all violations for all properties of this type...)
