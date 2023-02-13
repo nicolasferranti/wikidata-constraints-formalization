@@ -15,6 +15,10 @@
 	sh:targetObjectsOf p:P5065 ;
 	sh:property [
       	sh:path (psv:P5065 wikibase:quantityUnit) ;
+	# for formulating allowed units constraints in SHACL, we need 
+	# to explicitly list the allowed units for the specific property, there is no way to query them as in SPARQL
+	# Note: in the case of P5065 is is only one unit Q182429, so in this case, 
+	#       we could alterantively also use and sh:value instead of an sh:in
       	sh:in ( wd:Q182429) ;
       	sh:minCount 1 ;
     ] .
