@@ -10,7 +10,11 @@ SELECT
 WHERE
 {
   ?subject ?p_property ?stmt.
+  # violations are statements without a reference...
   FILTER NOT EXISTS {?stmt prov:wasDerivedFrom ?wdref.}
+  # Alternative: Strictly speaking also statemens with an empty reference should be reported, so this could be further refined to ...
+  # FILTER NOT EXISTS {?stmt prov:wasDerivedFrom ?wdref. FILTER( ! isBlank(?wdref) }
+  # ... but we refrained from this formulations because isBlank is not supported in Wikidata's query endpoint, cf. https://www.mediawiki.org/wiki/Wikidata_Query_Service/Blank_Node_Skolemization
   ?wd_property wikibase:claim ?p_property.
   ?wd_property wikibase:directClaim ?wdt_prop.
   ?wd_property p:P2302 ?statement.
