@@ -9,7 +9,7 @@
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 
 
-# windSpeed
+# windSpeed (P5065) has allowed unit metre per second (Q182429)
 :P5065_AllowedUnitsShape
         a sh:NodeShape ;
 	sh:targetObjectsOf p:P5065 ;
