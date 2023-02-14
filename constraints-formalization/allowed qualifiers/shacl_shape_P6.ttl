@@ -1,7 +1,8 @@
-# Note that allowed-qualiier-constraints are actually NOT SHACL-Core expressible. The following uses a "trick" to 
-# enforce the allowed qualiefiers only by disallowing the all remaining (non-allowed) qualifiers.
-# One problem here is that other properties might be possible, but only qualifier properties should be excluded.
-# While this is expressible in SPARQL, such additional constraints on the actual path are beyond the expressivity of SHACL.
+# Note that allowed-qualiier-constraints (Q21510851), cf. https://www.wikidata.org/wiki/Q21510851 are actually NOT SHACL-Core expressible directly. 
+# A problem here is that other properties might be possible, but only qualifier properties should be excluded.
+# While this is expressible in SPARQL, such additional constraints on the actual path are beyond the (direct) expressivity of SHACL.
+# The following uses a "trick" to enforce the allowed qualifiers only by disallowing the all remaining (non-allowed) qualifiers explicitly; 
+# this however bears the problem, that the list of qualifiers may change and is probably too large for any SHACL engine to swallow. 
 
 @prefix :        <http://example.org/> .
 @prefix wdt:     <http://www.wikidata.org/prop/direct/> .
