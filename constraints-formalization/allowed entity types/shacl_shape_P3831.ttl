@@ -9,6 +9,10 @@
 #  Wikibase form
 #  Wikibase sense
 #  Wikibase property
+#
+# NOTE: This is only partially representable in SHACL, due to the incomplete/non-explicitly typed RDF export in Wikidata:
+#       cf. the SPARQL formulation at https://github.com/nicolasferranti/wikidata-constraints-formalization/blob/main/constraints-formalization/allowed%20entity%20types/sparql/allowed_entities.rq 
+#       for details.
 
 @prefix :        <http://example.org/> .
 @prefix wdt:     <http://www.wikidata.org/prop/direct/> .
@@ -22,10 +26,38 @@
 # objectHasRole
 :P3831_AllowedEntityTypesShape 
 	a sh:NodeShape ;
-	sh:targetObjectsOf wdt:P3831;
-	sh:not [
-      	sh:property [
-  			sh:path [ sh:inversePath wdt:P3831 ]  ;
-        	sh:pattern "^http://www.wikidata.org/entity/P" ;
+	sh:targetSubjectsOf wdt:P3831;
+	sh:or ( 
+		[
+			sh:path  rdf:type;
+			sh:hasValue wikibase:Item ;
+			sh:minCount 1
 		]
-    ] .
+		[
+			sh:path  rdf:type;
+			sh:hasValue wikibase:MediaInfo  ;
+	                sh:minCount 1
+		]
+		[
+			sh:path  rdf:type;
+			sh:hasValue ontolex:LexicalEntry  ;
+			sh:minCount 1
+		]
+	        [
+			sh:path  rdf:type;
+			sh:hasValue ontolex:Form  ;
+			sh:minCount 1
+		]
+	        [
+			sh:path  rdf:type;
+			sh:hasValue ontolex:Sense  ;
+			sh:minCount 1
+		]
+                [
+			sh:path  rdf:type;
+			sh:hasValue wikibase:Property  ;
+			sh:minCount 1
+		]
+
+
+	) .
