@@ -19,7 +19,7 @@ SELECT DISTINCT
   FILTER NOT EXISTS {?statement pq:P2303 ?s.}
   
   OPTIONAL {?statement pq:P2316 ?constraint_status}
-  OPTIONAL {?statement pq:P2341 ?deprecated_reason}
+  OPTIONAL {?statement pq:P2241 ?deprecated_reason}
   # EXAMPLE (comment next line and the limit clause to query all violations for all properties of this type...)
   # ... however note the risk of timeout: we suggest to run these queries one by one for each property of this type
   FILTER (?wdt_property = wdt:P1469)
