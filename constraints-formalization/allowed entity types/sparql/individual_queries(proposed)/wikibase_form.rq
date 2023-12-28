@@ -9,5 +9,5 @@ WHERE
   ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
   FILTER NOT EXISTS {?statement pq:P2305 wd:Q54285143.} # wikibase form
  
-  ?subject wikibase:propertyType wikibase:WikibaseForm .
+  ?subject a ontolex:Form .
 }
