@@ -9,5 +9,6 @@ WHERE
   ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
   FILTER NOT EXISTS {?statement pq:P2305 wd:Q29934218.} # wikibase property
 
-  ?subject wikibase:propertyType wikibase:WikibaseProperty.
+  #?subject wikibase:propertyType wikibase:WikibaseProperty.
+  ?subject a wikibase:Property.
 }
