@@ -9,5 +9,6 @@ WHERE
   ?statement ps:P2302 wd:Q52004125. # allowed entity types constraint
   FILTER NOT EXISTS {?statement pq:P2305 wd:Q51885771.} # wikibase lexeme
 
-  ?subject wikibase:propertyType wikibase:WikibaseLexeme.  
+  #?subject wikibase:propertyType wikibase:WikibaseLexeme.  
+  ?subject a ontolex:LexicalEntry.
 }
