@@ -5,10 +5,13 @@
 
 # FifaPlayerId
 :P1469_ItemRequiresStatementShape 
-	a sh:NodeShape ;
-	sh:targetSubjectsOf wdt:P1469 ;
-	sh:property [
-    	sh:path wdt:P106 ;
-        sh:minCount 1;
-        sh:in (wd:Q937857 wd:Q18515558 wd:Q21057452 wd:Q628099) ;
-  	] .
+    a sh:NodeShape ;
+    sh:targetSubjectsOf wdt:P1469 ;
+    sh:property [
+        sh:path wdt:P106 ;
+        sh:qualifiedValueShape [
+            sh:in (wd:Q937857 wd:Q18515558 
+                wd:Q21057452 wd:Q628099) ;
+	] ;
+        sh:qualifiedMinCount 1 ;
+    ] .
