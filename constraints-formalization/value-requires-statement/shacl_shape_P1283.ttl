@@ -13,9 +13,11 @@
 	    [ sh:in (wd:Q1750628 wd:Q622435)    ]
 	    [
 	        sh:property [
-    	        sh:path wdt:P1283 wdt:P360 ;
-                sh:minCount 1 ;
-                sh:in (wd:Q11424) ;
+    			sh:path wdt:P1283 wdt:P360 ;
+	                sh:qualifiedValueShape [
+		            sh:in (wd:Q11424) ;
+			] ;
+		        sh:qualifiedMinCount 1 ;
   	        ]
 	    ]
 	) .
